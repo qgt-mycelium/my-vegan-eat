@@ -1,0 +1,10 @@
+{{ form_start(form) }}
+{{ form_row(form.username) }}
+{{ form_row(form.email) }}
+{{ form_row(form.password.first) }}
+{{ form_row(form.password.second) }}
+
+{# <input type="hidden" name="token" value="{{ csrf_token('register') }}"/> #}
+
+<button type="submit">Register!</button>
+{{ form_end(form) }}
