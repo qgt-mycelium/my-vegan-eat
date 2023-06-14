@@ -12,8 +12,6 @@ parameters:
     # Specific configuration for the Symfony plugin
     symfony:
         container_xml_path: var/cache/dev/App_KernelDevDebugContainer.xml   
-    scanDirectories:
-        - var/cache/dev/Symfony/Config
 
     # https://github.com/phpstan/phpstan-doctrine#configuration
     doctrine:

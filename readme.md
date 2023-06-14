@@ -38,13 +38,13 @@
     - Un pseudo ✔️
     - Un mot de passe ✔️
     - Un avatar ✖️
-- Un article posséde
-    - Un titre
-    - Un contenu
-    - Une date de publication
-    - Des likes
-    - Des tags
-    - Une liste de commentaires
+- Un article possède
+    - Un titre ✔️
+    - Un contenu ✔️
+    - Une date de publication ✔️
+    - Des likes ✔️
+    - Des tags ✔️
+    - Une liste de commentaires ✖️
     - SEO
         - Un title
         - Une meta description
