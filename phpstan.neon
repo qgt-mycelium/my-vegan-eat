@@ -5,6 +5,7 @@ parameters:
     # https://phpstan.org/config-reference#analysed-files
     paths:
         - config
+        - tests
         - src
         - public
 

@@ -16,6 +16,6 @@ class ProfileController extends AbstractController
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('profile/index.html.twig');
+        return $this->render('pages/profile/index.html.twig');
     }
 }
