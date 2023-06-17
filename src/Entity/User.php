@@ -4,9 +4,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -42,12 +42,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getEmail(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     public function getRoles(): array
@@ -55,17 +55,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
+
         return array_unique($roles);
     }
 
     public function getPassword(): string
     {
-        return (string)$this->password;
+        return (string) $this->password;
     }
 
     public function getUsername(): string
     {
-        return (string)$this->username;
+        return (string) $this->username;
     }
 
     public function getSalt(): ?string
@@ -76,6 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): User
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -83,18 +85,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): User
     {
         $this->roles = $roles;
+
         return $this;
     }
 
     public function setPassword(string $password): User
     {
         $this->password = $password;
+
         return $this;
     }
 
     public function setUsername(string $username): User
     {
         $this->username = $username;
+
         return $this;
     }
 

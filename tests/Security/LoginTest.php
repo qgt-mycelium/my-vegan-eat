@@ -3,10 +3,10 @@
 namespace App\Tests\Controller\Security;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -16,7 +16,8 @@ class LoginTest extends WebTestCase
     /* ---------------- properties ---------------- */
     private KernelBrowser $client;
     private UrlGeneratorInterface $urlGenerator;
-    private $entityManager; /* @phpstan-ignore-line */
+    private EntityManagerInterface $entityManager;
+    private User $user;
 
     /* ---------------- setup ---------------- */
     protected function setUp(): void
@@ -25,7 +26,14 @@ class LoginTest extends WebTestCase
         $container = $this->client->getContainer();
 
         $this->urlGenerator = $container->get('router');
-        $this->entityManager = $container->get('doctrine')->getManager();
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $container->get('doctrine')->getManager();
+        $this->entityManager = $entityManager;
+
+        /** @var User $user */
+        $user = $this->entityManager->getRepository(User::class)->findOneBy([]);
+        $this->user = $user;
     }
 
     /* ---------------- tests ---------------- */
@@ -38,8 +46,11 @@ class LoginTest extends WebTestCase
             $this->urlGenerator->generate('app_login')
         );
 
+        /** @var User $user */
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'test_password']);
+
         $form = $crawler->filter('form[name="login"]')->form([
-            '_username' => 'jane.doe@example.com',
+            '_username' => $user->getEmail(),
             '_password' => 'password',
         ]);
 
@@ -52,13 +63,7 @@ class LoginTest extends WebTestCase
     // test logout page is accessible and it's working
     public function testLogoutWorks(): void
     {
-        /** @var UserRepository $userRepository */
-        $userRepository = $this->entityManager->getRepository(User::class);
-
-        /** @var User $user */
-        $user = $userRepository->findOneBy(['email' => 'jane.doe@example.com']);
-
-        $this->client->loginUser($user);
+        $this->client->loginUser($this->user);
 
         $this->assertNotNull($this->getTokenStorage()->getToken());
 
@@ -73,13 +78,7 @@ class LoginTest extends WebTestCase
     // test login page is not accessible when logged in
     public function testLoginWhenLoggedIn(): void
     {
-        /** @var UserRepository $userRepository */
-        $userRepository = $this->entityManager->getRepository(User::class);
-
-        /** @var User $user */
-        $user = $userRepository->findOneBy(['email' => 'jane.doe@example.com']);
-
-        $this->client->loginUser($user);
+        $this->client->loginUser($this->user);
 
         $this->client->request(
             Request::METHOD_GET,
@@ -93,8 +92,8 @@ class LoginTest extends WebTestCase
 
     /**
      * @dataProvider provideSelectors
+     *
      * @param array<string, string> $data
-     * @param string $text
      */
     public function testAssertSelectorTextContains(array $data, string $text): void
     {
@@ -114,11 +113,11 @@ class LoginTest extends WebTestCase
     {
         yield [
             [],
-            'Invalid credentials.'
+            'Invalid credentials.',
         ];
         yield [
             ['_csrf_token' => ''],
-            'Invalid CSRF token.'
+            'Invalid CSRF token.',
         ];
     }
 
@@ -133,6 +132,5 @@ class LoginTest extends WebTestCase
     {
         parent::tearDown();
         $this->entityManager->close();
-        $this->entityManager = null;
     }
 }

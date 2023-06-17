@@ -61,17 +61,17 @@ class Post
 
     public function getTitle(): string
     {
-        return (string)$this->title;
+        return (string) $this->title;
     }
 
     public function getSlug(): string
     {
-        return (string)$this->slug;
+        return (string) $this->slug;
     }
 
     public function getContent(): string
     {
-        return (string)$this->content;
+        return (string) $this->content;
     }
 
     public function getPublishedAt(): ?\DateTimeInterface
@@ -90,24 +90,28 @@ class Post
     public function setTitle(string $title): Post
     {
         $this->title = $title;
+
         return $this;
     }
 
     public function setSlug(string $slug): Post
     {
         $this->slug = $slug;
+
         return $this;
     }
 
     public function setContent(string $content): Post
     {
         $this->content = $content;
+
         return $this;
     }
 
     public function setPublishedAt(?\DateTimeInterface $publishedAt): Post
     {
         $this->publishedAt = $publishedAt;
+
         return $this;
     }
 
@@ -116,6 +120,7 @@ class Post
         if (!$this->likes->contains($user)) {
             $this->likes->add($user);
         }
+
         return $this;
     }
 
@@ -124,6 +129,7 @@ class Post
         if ($this->likes->contains($user)) {
             $this->likes->removeElement($user);
         }
+
         return $this;
     }
 
@@ -141,6 +147,7 @@ class Post
             $this->tags->add($tag);
             $tag->addPost($this);
         }
+
         return $this;
     }
 
@@ -150,6 +157,7 @@ class Post
             $this->tags->removeElement($tag);
             $tag->removePost($this);
         }
+
         return $this;
     }
 }

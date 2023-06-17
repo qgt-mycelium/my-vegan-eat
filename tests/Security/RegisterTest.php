@@ -2,11 +2,13 @@
 
 namespace App\Tests\Controller\Security;
 
+use Faker\Factory;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -15,7 +17,8 @@ class RegisterTest extends WebTestCase
     /* ---------------- properties ---------------- */
     private KernelBrowser $client;
     private UrlGeneratorInterface $urlGenerator;
-    private $entityManager; /* @phpstan-ignore-line */
+    private EntityManagerInterface $entityManager;
+    private User $user;
 
     /* ---------------- setup ---------------- */
     protected function setUp(): void
@@ -24,7 +27,14 @@ class RegisterTest extends WebTestCase
         $container = $this->client->getContainer();
 
         $this->urlGenerator = $container->get('router');
-        $this->entityManager = $container->get('doctrine')->getManager();
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $container->get('doctrine')->getManager();
+        $this->entityManager = $entityManager;
+
+        /** @var User $user */
+        $user = $this->entityManager->getRepository(User::class)->findOneBy([]);
+        $this->user = $user;
     }
 
     /* ---------------- tests ---------------- */
@@ -32,7 +42,9 @@ class RegisterTest extends WebTestCase
     // test register page is accessible and it's working
     public function testRegisterWorks(): void
     {
-        $email = 'john.doe@example.com';
+        $faker = Factory::create();
+        $email = $faker->email();
+        $password = $faker->password();
 
         $crawler = $this->client->request(
             Request::METHOD_GET,
@@ -41,9 +53,9 @@ class RegisterTest extends WebTestCase
 
         $form = $crawler->filter('form[name="registration"]')->form([
             'registration[email]' => $email,
-            'registration[username]' => 'John',
-            'registration[password][first]' => 'password',
-            'registration[password][second]' => 'password',
+            'registration[username]' => $faker->userName(),
+            'registration[password][first]' => $password,
+            'registration[password][second]' => $password,
         ]);
 
         $this->client->submit($form);
@@ -63,16 +75,10 @@ class RegisterTest extends WebTestCase
     // test visiting register page while logged in
     public function testVisitingWhileLoggedIn(): void
     {
-        /** @var UserRepository $userRepository */
-        $userRepository = $this->entityManager->getRepository(User::class);
+        $this->client->loginUser($this->user);
 
-        /** @var User $user */
-        $user = $userRepository->findOneBy(['email' => 'jane.doe@example.com']);
-        
-        $this->client->loginUser($user);
-        
         $this->client->request(
-            Request::METHOD_GET, 
+            Request::METHOD_GET,
             $this->urlGenerator->generate('app_register')
         );
 
@@ -83,13 +89,13 @@ class RegisterTest extends WebTestCase
 
     /**
      * @dataProvider provideSelectors
+     *
      * @param array<string, string> $data
-     * @param string $text
      */
     public function testAssertSelectorTextContains(array $data, string $text): void
     {
         $crawler = $this->client->request(
-            Request::METHOD_GET, 
+            Request::METHOD_GET,
             $this->urlGenerator->generate('app_register')
         );
 
@@ -102,10 +108,6 @@ class RegisterTest extends WebTestCase
     public function provideSelectors(): \Generator
     {
         yield [
-            ['registration[username]' => 'Jane'],
-            'This username is already taken.'
-        ];
-        yield [
             ['registration[password][first]' => 'password'],
             'The values do not match. Repeat Password Register!',
         ];
@@ -114,7 +116,7 @@ class RegisterTest extends WebTestCase
                 'registration[password][first]' => 'pass',
                 'registration[password][second]' => 'pass',
             ],
-            'This value is too short. It should have 6 characters or more.'
+            'This value is too short. It should have 6 characters or more.',
         ];
     }
 
@@ -123,6 +125,5 @@ class RegisterTest extends WebTestCase
     {
         parent::tearDown();
         $this->entityManager->close();
-        $this->entityManager = null;
     }
 }

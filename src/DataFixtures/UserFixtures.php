@@ -9,22 +9,28 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-    public const USER_REFERENCE = 'user';
-
     public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
     }
 
+    // Create some users (between 20 and 30) with random data and add them to the database
     public function load(ObjectManager $manager): void
     {
-        $userJane = (new User());
-        $userJane->setEmail('jane.doe@example.com');
-        $userJane->setUsername('Jane');
-        $userJane->setPassword($this->passwordHasher->hashPassword($userJane, 'password'));
+        $faker = \Faker\Factory::create();
+        $countUsers = mt_rand(20, 30);
+        $userPasswordTestLoop = mt_rand(1, $countUsers);
 
-        $manager->persist($userJane);
+        foreach (range(1, $countUsers) as $i) {
+            $user = (new User());
+            $user->setEmail($faker->email());
+            $user->setUsername($userPasswordTestLoop == $i ? 'test_password' : $faker->userName());
+            // Hash the password with the password hasher, but use 'password' as password for the user with the username 'test_password'
+            $user->setPassword($this->passwordHasher->hashPassword($user, $userPasswordTestLoop == $i ? 'password' : $faker->password(6, 20)));
+            $manager->persist($user);
+            $this->addReference('user_'.$i, $user);
+        }
+
+        // Flush the users to the database
         $manager->flush();
-
-        $this->addReference(self::USER_REFERENCE, $userJane);
     }
 }

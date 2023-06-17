@@ -47,7 +47,6 @@ class SecurityController extends AbstractController
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher
     ): Response {
-
         // If the user is logged in, deny access!
         if ($this->getUser()) {
             throw new AccessDeniedHttpException();
@@ -60,9 +59,9 @@ class SecurityController extends AbstractController
         // 2. Handle the submit (will only happen on POST)
         $form->handleRequest($request);
         if (
-            $form->isSubmitted() &&
-            $form->isValid() &&
-            is_string($form->get('password')->getData())
+            $form->isSubmitted()
+            && $form->isValid()
+            && is_string($form->get('password')->getData())
         ) {
             // 3. Encode the password (you could also do this via Doctrine listener)
             $user->setPassword(
@@ -78,6 +77,7 @@ class SecurityController extends AbstractController
 
             // 5. Redirect to some other page (like home)
             $this->addFlash('success', 'Your account has been created! You can now log in.');
+
             return $this->redirectToRoute('app_login');
         }
 

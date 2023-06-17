@@ -3,10 +3,10 @@
 namespace App\Tests\Controller;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -15,7 +15,8 @@ class ProfileTest extends WebTestCase
     /* ---------------- properties ---------------- */
     private KernelBrowser $client;
     private UrlGeneratorInterface $urlGenerator;
-    private $entityManager; /* @phpstan-ignore-line */
+    private EntityManagerInterface $entityManager;
+    private User $user;
 
     /* ---------------- setup ---------------- */
     protected function setUp(): void
@@ -24,9 +25,16 @@ class ProfileTest extends WebTestCase
         $container = $this->client->getContainer();
 
         $this->urlGenerator = $container->get('router');
-        $this->entityManager = $container->get('doctrine')->getManager();
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $container->get('doctrine')->getManager();
+        $this->entityManager = $entityManager;
+
+        /** @var User $user */
+        $user = $this->entityManager->getRepository(User::class)->findOneBy([]);
+        $this->user = $user;
     }
-    
+
     /* ---------------- tests ---------------- */
 
     // test profile page is redirecting to login page when not logged in
@@ -45,13 +53,7 @@ class ProfileTest extends WebTestCase
     // test profile page is accessible and it's working when logged in
     public function testProfileWorksWhenLoggedIn(): void
     {
-        /** @var UserRepository $userRepository */
-        $userRepository = $this->entityManager->getRepository(User::class);
-
-        /** @var User $user */
-        $user = $userRepository->findOneBy(['email' => 'jane.doe@example.com']);
-
-        $this->client->loginUser($user);
+        $this->client->loginUser($this->user);
 
         $crawler = $this->client->request(
             Request::METHOD_GET,
@@ -59,15 +61,13 @@ class ProfileTest extends WebTestCase
         );
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Hello Jane!');
+        $this->assertSelectorTextContains('h1', 'Hello '.$this->user->getUsername().'!');
     }
 
     /* ---------------- teardown ---------------- */
     protected function tearDown(): void
     {
         parent::tearDown();
-
         $this->entityManager->close();
-        $this->entityManager = null;
     }
 }

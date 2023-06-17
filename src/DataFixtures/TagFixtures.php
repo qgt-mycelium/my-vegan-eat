@@ -3,19 +3,22 @@
 namespace App\DataFixtures;
 
 use App\Entity\Tag;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class TagFixtures extends Fixture
 {
-    public const TAG_REFERENCE = 'tag';
-
+    // Create some tags with faker (between 10 and 20) with random data and add them to the database
     public function load(ObjectManager $manager): void
     {
-        $tag = (new Tag('Symfony'));
-        $manager->persist($tag);
-        $manager->flush();
+        $faker = \Faker\Factory::create();
 
-        $this->addReference(self::TAG_REFERENCE, $tag);
+        foreach (range(1, mt_rand(10, 20)) as $i) {
+            $tag = (new Tag($faker->word()));
+            $manager->persist($tag);
+            $this->addReference('tag_'.$i, $tag);
+        }
+
+        $manager->flush();
     }
 }

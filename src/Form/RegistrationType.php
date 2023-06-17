@@ -20,16 +20,16 @@ class RegistrationType extends AbstractType
             ->add('username', TextType::class)
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'first_options' => array('label' => 'Password'),
-                'second_options' => array('label' => 'Repeat Password'),
+                'first_options' => ['label' => 'Password'],
+                'second_options' => ['label' => 'Repeat Password'],
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => User::class,
             'csrf_protection' => true,
-        ));
+        ]);
     }
 }

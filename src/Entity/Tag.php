@@ -42,12 +42,13 @@ class Tag
 
     public function getName(): string
     {
-        return (string)$this->name;
+        return (string) $this->name;
     }
 
     public function setName(string $name): Tag
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -62,12 +63,14 @@ class Tag
     public function addPost(Post $post): Tag
     {
         $this->posts[] = $post;
+
         return $this;
     }
 
     public function removePost(Post $post): Tag
     {
         $this->posts->removeElement($post);
+
         return $this;
     }
 
