@@ -134,6 +134,16 @@ class Post
     }
 
     /**
+     * @param User[] $likes
+     */
+    public function setLikes(array $likes): Post
+    {
+        $this->likes = new ArrayCollection($likes);
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Tag>
      */
     public function getTags(): Collection
@@ -157,6 +167,16 @@ class Post
             $this->tags->removeElement($tag);
             $tag->removePost($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @param Tag[] $tags
+     */
+    public function setTags(array $tags): Post
+    {
+        $this->tags = new ArrayCollection($tags);
 
         return $this;
     }

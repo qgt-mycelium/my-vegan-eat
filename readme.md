@@ -10,6 +10,7 @@
 - Interdiction d'utiliser le composant **Maker**
 - PHPStan réglé au niveau max
 - Maximum 3 requêtes SQL par requête HTTP
+- Éviter le problème n+1
 - Utiliser Tailwind CSS
 - Test-Driven Development (TDD)
 
