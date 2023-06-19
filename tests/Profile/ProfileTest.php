@@ -47,7 +47,10 @@ class ProfileTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
         $this->client->followRedirect();
-        $this->assertRouteSame('app_login');
+        $this->assertEquals(
+            $this->urlGenerator->generate('app_login'),
+            $this->client->getRequest()->server->get('REQUEST_URI')
+        );
     }
 
     // test profile page is accessible and it's working when logged in

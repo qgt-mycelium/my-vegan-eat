@@ -12,9 +12,18 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home', methods: ['GET'])]
     public function index(PostRepository $postRepository): Response
     {
-        // Get the posts limited to 8
-        $posts = $postRepository->findPublishedOrderedByNewest(8);
+        return $this->render('pages/home.html.twig', [
+            'posts' => $postRepository->findPublishedOrderedByNewest(8),
+        ]);
+    }
 
-        return $this->render('pages/home.html.twig', compact('posts'));
+    /**
+     * Fragment caching for footer.
+     */
+    public function footer(PostRepository $postRepository): Response
+    {
+        return $this->render('partials/_footer.html.twig', [
+            'posts' => $postRepository->findPopularOrderedByMostLiked(4),
+        ])->setSharedMaxAge(3600);
     }
 }

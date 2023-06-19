@@ -17,6 +17,29 @@ class PostRepository extends ServiceEntityRepository
     /* ---------- Custom queries ---------- */
 
     /**
+     * Find popular posts ordered by most liked.
+     *
+     * @param int|null $maxResults
+     *
+     * @return Post[]
+     */
+    public function findPopularOrderedByMostLiked(int|null $maxResults = null): array
+    {
+        /** @var Post[] $posts */
+        $posts = $this->createQueryBuilder('p')
+            ->select('p')
+            ->join('p.likes', 'l')
+            ->where('p.publishedAt IS NOT NULL')
+            ->groupBy('p.id')
+            ->orderBy('COUNT(l.id)', 'DESC')
+            ->setMaxResults($maxResults)
+            ->getQuery()
+            ->getResult();
+
+        return $posts;
+    }
+
+    /**
      * Find published posts ordered by newest.
      *
      * @param int|null $maxResults

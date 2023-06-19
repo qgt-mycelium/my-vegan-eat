@@ -31,6 +31,12 @@ class HomeTest extends WebTestCase
         $this->assertSelectorExists('nav');
     }
 
+    public function testHomepageHasFooter(): void
+    {
+        $this->client->request(Request::METHOD_GET, '/');
+        $this->assertSelectorExists('footer');
+    }
+
     /* ---------------- teardown ---------------- */
     public function tearDown(): void
     {

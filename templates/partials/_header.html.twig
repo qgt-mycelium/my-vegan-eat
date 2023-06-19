@@ -1,4 +1,5 @@
-<nav class="border-gray-600 bg-gray-800">
+<!-- START: Navigation -->
+<nav class="border-gray-600 bg-gray-800 sticky top-0 z-40">
 	<div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
 		<a href="{{ path('app_home') }}" class="flex items-center">
 			<span class="self-center text-2xl font-semibold whitespace-nowrap text-white">{{ '🍃 MyVeganEat' }}</span>
@@ -11,21 +12,33 @@
 		</button>
 		<div id="navbar-menu" class="items-center justify-between font-medium hidden w-full md:flex md:w-auto md:order-1">
 			<ul class="flex flex-col p-4 md:p-0 mt-4 border border-gray-700 rounded-lg bg-gray-800 md:flex-row md:space-x-8 md:mt-0 md:border-0">
-				{%- set _route = app.request.attributes.get('_route') -%}
-				{%- for item in [
+				<!-- START: Menu -->
+				{% set _route = app.request.attributes.get('_route') %}
+				{% for item in [
 					{ 'route': 'app_home', 'label': 'Home' },
-				] -%}
+				] %}
+
 					<li>
-						<a href="{{ path(item.route) }}" 
-							class="
-								block text-gray-300 
-								{{ (_route == item.route ? '' : 'hover:') ~ 'bg-gray-700' }} 
-								rounded-lg p-3 md:py-2 my-1 md:my-0 text-sm font-medium">
-							{{ item.label }}
+						<a href="{{ path(item.route) }}" class="block text-gray-300 {{ (_route == item.route ? '' : 'hover:') ~ 'bg-gray-700' }} rounded-lg p-3 md:py-2 my-1 md:my-0 text-sm font-medium">
+							{{- item.label -}}
 						</a>
 					</li>
-				{%- endfor -%}
+
+				{% endfor -%}
+				<!-- END: Menu -->
 			</ul>
 		</div>
 	</div>
 </nav>
+<!-- END: Navigation -->
+
+<!-- START: Banner -->
+<div style="background-image: url({{ asset("/build/images/banners/#{banner.image ?? 'home.png'}") }})" class="w-full h-64 bg-cover">
+	<div class="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50">
+		<div class="text-center">
+			<h1 class="text-4xl font-semibold text-white">{{ "#{banner.title ?? '🍃 MyVeganEat'}" }}</h1>
+			<p class="text-xl font-semibold text-white">{{ "#{banner.slogan ?? 'The best vegan recipes'}" }}</p>
+		</div>
+	</div>
+</div>
+<!-- END: Banner -->

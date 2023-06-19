@@ -2,14 +2,12 @@
 
 {% block body %}
 
-	{# Display latest posts #}
-
-	<div id="latest-posts" class="container max-w-6xl mx-auto grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-auto gap-4 py-6 px-4 xl:px-0">
-
-		{% for post in posts %}
-			{% include 'components/_card.html.twig' with {'title': post.title, 'tags': post.tags, 'likes': post.likes} only %}
-		{% endfor %}
-
-	</div>
+<!-- START: Latest Posts -->
+<div id="latest-posts" class="container max-w-6xl mx-auto grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-auto gap-4 py-6 px-4 xl:px-0">
+	{% for post in posts ~%}
+		{%~ include 'components/_card.html.twig' with {'title': post.title, 'tags': post.tags, 'likes': post.likes} only %}
+	{%~ endfor ~%}
+</div>
+<!-- END: Latest Posts -->
 
 {% endblock %}

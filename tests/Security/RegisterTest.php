@@ -68,7 +68,10 @@ class RegisterTest extends WebTestCase
 
         $this->assertNotNull($user);
         $this->client->followRedirect();
-        $this->assertRouteSame('app_login');
+        $this->assertEquals(
+            $this->urlGenerator->generate('app_login'),
+            $this->client->getRequest()->server->get('REQUEST_URI')
+        );
         $this->assertSelectorTextContains('body', 'Your account has been created! You can now log in.');
     }
 
