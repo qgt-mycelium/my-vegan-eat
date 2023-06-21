@@ -19,9 +19,9 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
-        "dev-server": "encore dev-server",
-        "dev": "encore dev",
-        "watch": "encore dev --watch",
-        "build": "encore production --progress"
+        "dev-server": "encore dev-server        --config ./config/packages/webpack/webpack.config.js",
+        "dev": "encore dev                      --config ./config/packages/webpack/webpack.config.js",
+        "watch": "encore dev --watch            --config ./config/packages/webpack/webpack.config.js",
+        "build": "encore production --progress  --config ./config/packages/webpack/webpack.config.js"
     }
 }

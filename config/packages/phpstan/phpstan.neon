@@ -4,19 +4,19 @@ parameters:
 
     # https://phpstan.org/config-reference#analysed-files
     paths:
-        - config
-        - tests
-        - src
-        - public
+        - ../../../config
+        - ../../../tests
+        - ../../../src
+        - ../../../public
 
     # https://github.com/phpstan/phpstan-symfony#configuration
     # Specific configuration for the Symfony plugin
     symfony:
-        container_xml_path: var/cache/dev/App_KernelDevDebugContainer.xml   
+        container_xml_path: ../../../var/cache/dev/App_KernelDevDebugContainer.xml   
 
     # https://github.com/phpstan/phpstan-doctrine#configuration
     doctrine:
-        objectManagerLoader: config/phpstan/doctrine-object-manager.php
+        objectManagerLoader: ./doctrine-object-manager.php
 
     # https://phpstan.org/config-reference#vague-typehints
     checkMissingIterableValueType: true

@@ -3,9 +3,11 @@
 use App\Kernel;
 use Symfony\Component\Dotenv\Dotenv;
 
-require __DIR__.'/../../vendor/autoload.php';
+$sub_level = dirname(__DIR__, 3);
 
-(new Dotenv())->bootEnv(__DIR__.'/../../.env');
+require_once $sub_level.'/vendor/autoload.php';
+
+(new Dotenv())->bootEnv($sub_level.'/.env');
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
 $kernel->boot();
