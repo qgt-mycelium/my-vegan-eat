@@ -25,7 +25,7 @@
 						
                         {%~ for post in posts %}
                         <li class="mb-4">
-                            <a href="#" class="hover:underline ">{{- post.title | capitalize -}}</a>
+                            <a href="{{ path('app_post', {slug: post.slug}) }}" class="hover:underline ">{{- post.title | capitalize -}}</a>
                         </li>
 						{%~ endfor %}
 

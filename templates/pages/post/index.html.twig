@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="container max-w-6xl mx-auto grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-auto gap-4 py-6 px-4 xl:px-0">
+		{% for post in posts %}
+			{% include 'components/_card.html.twig' with { 
+                'tags': post.tags, 
+                'likes': post.likes,
+                'title': post.title,
+                'link': path('app_post', {
+                    slug: post.slug
+                }),
+            } only %}
+		{% endfor %}
+	</div>
+{% endblock %}

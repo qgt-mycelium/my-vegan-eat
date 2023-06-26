@@ -21,7 +21,7 @@
 	
 		{%~ include "partials/_header.html.twig" with {'banner': banner ?? []} only ~%}
 		{% block body %}{% endblock %}
-		{{~ render(controller('App\\Controller\\HomeController::footer')) ~}}
+		{{~ render_esi(controller('App\\Controller\\HomeController::footer')) ~}}
 
 	</body>
 </html>

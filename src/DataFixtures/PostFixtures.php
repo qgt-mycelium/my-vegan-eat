@@ -21,8 +21,8 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = \Faker\Factory::create();
 
-        // Create a random number of posts (between 10 and 20) with random data and add likes and tags randomly
-        foreach (range(1, mt_rand(10, 20)) as $i) {
+        // Create a random number of posts (between 30 and 50) with random data and add likes and tags randomly
+        foreach (range(1, mt_rand(30, 50)) as $i) {
             $post = (new Post());
             $post->setTitle($faker->sentence());
             $post->setSlug($faker->slug());
