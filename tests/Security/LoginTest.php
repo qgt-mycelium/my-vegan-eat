@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller\Security;
+namespace App\Tests\Security;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;

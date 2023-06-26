@@ -18,10 +18,13 @@
     },
     "license": "UNLICENSED",
     "private": true,
+    "config": {
+        "webpack": "./config/packages/webpack/webpack.config.js"
+    },
     "scripts": {
-        "dev-server": "encore dev-server        --config ./config/packages/webpack/webpack.config.js",
-        "dev": "encore dev                      --config ./config/packages/webpack/webpack.config.js",
-        "watch": "encore dev --watch            --config ./config/packages/webpack/webpack.config.js",
-        "build": "encore production --progress  --config ./config/packages/webpack/webpack.config.js"
+        "dev-server": "encore dev-server -c %npm_package_config_webpack%",
+        "dev": "encore dev -c %npm_package_config_webpack%",
+        "watch": "encore dev --watch -c %npm_package_config_webpack%",
+        "build": "encore production --progress -c %npm_package_config_webpack%"
     }
 }

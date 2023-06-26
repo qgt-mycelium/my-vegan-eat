@@ -44,12 +44,17 @@ class Post
     #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'posts')]
     private Collection $tags;
 
+    /** @var Collection<Category> $categories */
+    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'posts')]
+    private Collection $categories;
+
     /* ---------- Constructor ---------- */
 
     public function __construct()
     {
         $this->likes = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     /* ---------- Getters and setters ---------- */
@@ -177,6 +182,44 @@ class Post
     public function setTags(array $tags): Post
     {
         $this->tags = new ArrayCollection($tags);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): Post
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->addPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): Post
+    {
+        if ($this->categories->contains($category)) {
+            $this->categories->removeElement($category);
+            $category->removePost($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Category[] $categories
+     */
+    public function setCategories(array $categories): Post
+    {
+        $this->categories = new ArrayCollection($categories);
 
         return $this;
     }

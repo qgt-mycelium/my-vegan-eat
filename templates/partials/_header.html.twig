@@ -15,11 +15,13 @@
 				<!-- START: Menu -->
 				{% set _route = app.request.attributes.get('_route') %}
 				{% for item in [
-					{ 'route': 'app_home', 'label': 'Home' },
+					{ route: 'app_home', label: 'Home' },
+					{ route: 'app_category', label: 'Recipes', parameters: {slug: 'recipes'} },
+					{ route: 'app_categories', label: 'Tips' },
 				] %}
 
 					<li>
-						<a href="{{ path(item.route) }}" class="block text-gray-300 {{ (_route == item.route ? '' : 'hover:') ~ 'bg-gray-700' }} rounded-lg p-3 md:py-2 my-1 md:my-0 text-sm font-medium">
+						<a href="{{ path(item.route, item.parameters ?? []) }}" class="block text-gray-300 {{ (_route == item.route ? '' : 'hover:') ~ 'bg-gray-700' }} rounded-lg p-3 md:py-2 my-1 md:my-0 text-sm font-medium">
 							{{- item.label -}}
 						</a>
 					</li>

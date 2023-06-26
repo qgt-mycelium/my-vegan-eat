@@ -9,7 +9,7 @@
 - Symfony 6 et PHP8
 - Interdiction d'utiliser le composant **Maker**
 - PHPStan réglé au niveau max
-- Maximum 3 requêtes SQL par requête HTTP
+- Nombre de requêtes SQL limitées par pages
 - Éviter le problème n+1
 - Utiliser Tailwind CSS
 - Test-Driven Development (TDD)

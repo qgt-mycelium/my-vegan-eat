@@ -63,14 +63,14 @@ class PostRepository extends ServiceEntityRepository
         return $posts;
     }
 
-    /* ---------- Private functions ---------- */
+    /* ---------- Hydrate functions ---------- */
 
     /**
      * Hydrate the tags of the posts.
      *
      * @param Post[] $posts
      */
-    private function hydrateTags($posts): void
+    public function hydrateTags($posts): void
     {
         $tags = $this->getEntityManager()
             ->getRepository(Tag::class)
@@ -88,7 +88,7 @@ class PostRepository extends ServiceEntityRepository
      *
      * @param Post[] $posts
      */
-    private function hydrateLikes($posts): void
+    public function hydrateLikes($posts): void
     {
         // Get the posts ids
         $postsIds = array_map(function ($post) {
