@@ -18,6 +18,7 @@
 					{ route: 'app_home', label: 'Home' },
 					{ route: 'app_category', label: 'Recipes', parameters: {slug: 'recipes'} },
 					{ route: 'app_categories', label: 'Tips' },
+					{ route: "app_#{app.user ? 'logout' : 'login'}", label: "#{app.user ? 'Logout' : 'Login'}"}
 				] %}
 
 					<li>
@@ -34,13 +35,15 @@
 </nav>
 <!-- END: Navigation -->
 
-<!-- START: Banner -->
-<div style="background-image: url({{ asset("/build/images/banners/#{banner.image ?? 'home.png'}") }})" class="w-full h-64 bg-cover">
-	<div class="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50">
-		<div class="text-center">
-			<h1 class="text-4xl font-semibold text-white">{{ "#{banner.title ?? '🍃 MyVeganEat'}" }}</h1>
-			<p class="text-xl font-semibold text-white">{{ "#{banner.slogan ?? 'The best vegan recipes'}" }}</p>
+{% if banner is defined and not banner is same as(false) %}
+	<!-- START: Banner -->
+	<div style="background-image: url({{ asset("/build/images/banners/#{banner.image ?? 'home.png'}") }})" class="w-full h-64 bg-cover">
+		<div class="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50">
+			<div class="text-center">
+				<h1 class="text-4xl font-semibold text-white">{{ "#{banner.title ?? '🍃 MyVeganEat'}" }}</h1>
+				<p class="text-xl font-semibold text-white">{{ "#{banner.slogan ?? 'The best vegan recipes'}" }}</p>
+			</div>
 		</div>
 	</div>
-</div>
-<!-- END: Banner -->
+	<!-- END: Banner -->
+{% endif %}

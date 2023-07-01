@@ -18,10 +18,14 @@
 
 	</head>
 	<body class="bg-gray-900 min-h-screen flex flex-col">
+
+		{% block body_prepend %}
 	
-		{%~ include "partials/_header.html.twig" with {'banner': banner ?? []} only ~%}
-		{% block body %}{% endblock %}
-		{{~ render_esi(controller('App\\Controller\\HomeController::footer')) ~}}
+			{%~ include "partials/_header.html.twig" with {'banner': banner ?? []} only ~%}
+			{% block body %}{% endblock %}
+			{{~ render_esi(controller('App\\Controller\\HomeController::footer')) ~}}
+
+		{% endblock %}
 
 	</body>
 </html>

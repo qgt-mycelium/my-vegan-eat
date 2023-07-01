@@ -1,1 +1,107 @@
-<h1>{{ "Hello #{app.user.username}!" }}</h1>
+{% extends 'base.html.twig' %}
+
+{% set banner = false %}
+
+{% block body %}
+
+	<div class="container my-6 px-4 xl:px-0 max-w-3xl mx-auto rounded-lg shadow-sm">
+		<h1 class="text-2xl font-bold tracking-tight text-white mb-6">{{ "Hello #{app.user.username}!" }}</h1>
+
+		<div
+			class="space-y-4 md:space-y-6">
+
+			<!-- Alerts -->
+			{%- for flashSuccess in app.flashes('success') -%}
+				<div class="flex p-4 text-sm text-green-400 rounded-lg bg-gray-800" role="alert">
+					<svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+					</svg>
+					<span class="sr-only">Info</span>
+					<div>
+						<span class="font-medium">{{ flashSuccess }}</span>
+					</div>
+				</div>
+			{%- endfor -%}
+
+			<!-- Account Information -->
+			{{ form_start(form_account, {'attr': {'class': 'p-4 border rounded-lg border-gray-600 bg-gray-800'}}) }}
+			<div class="flex items-center">
+				<svg aria-hidden="true" class="w-5 h-5 mr-2 text-gray-300" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+				</svg>
+				<span class="sr-only">Info</span>
+				<h2 class="text-lg font-medium text-gray-300">Account Information</h2>
+			</div>
+			<div class="mt-2 text-sm text-gray-300">
+				<p>
+					Your account was created
+					<time datetime="{{ 'now' }}">{{ 'now' | date("F jS, Y \\a\\t g:ia") ~ ' (UTC)' }}</time>.
+				</p>
+				<div class="my-4 grid sm:grid-cols-2 mt-6 grid-col-auto gap-4 items-end">
+					{%~ include 'components/_input.html.twig' with {'field': form_account.username, 'label': 'Your Username', 'type': 'text'} %}
+					{%~ include 'components/_input.html.twig' with {'field': form_account.email, 'label': 'Your Email', 'type': 'email'} %}
+				</div>
+				<div class="flex justify-end">
+					<button type="submit" class="border border-gray-700 font-medium rounded-lg text-xs px-3 py-1.5 text-center border-gray-600 hover:bg-gray-600 focus:ring-gray-800 text-gray-300 hover:text-white" data-dismiss-target="#alert-additional-content-1" aria-label="Close">
+						Confirm
+					</button>
+				</div>
+			</div>
+			{{ form_end(form_account) }}
+
+			<!-- Password Information -->
+			{{ form_start(form_password, {'attr': {'class': 'p-4 border rounded-lg border-gray-600 bg-gray-800'}}) }}
+			<div class="flex items-center">
+				<svg aria-hidden="true" class="w-5 h-5 mr-2 text-gray-300" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+				</svg>
+				<span class="sr-only">Info</span>
+				<h2 class="text-lg font-medium text-gray-300">Password Information</h2>
+			</div>
+			<div class="mt-2 mb-4 text-sm text-gray-300">
+				<p>
+					Your password was last updated
+					<time datetime="now">{{ 'now' | date("F jS, Y \\a\\t g:ia") ~ ' (UTC)' }}</time>.
+				</p>
+                <div class="my-4 grid sm:grid-cols-2 mt-6 grid-col-auto gap-4 items-end">
+                    {%~ include 'components/_input.html.twig' with {'field': form_password.oldPassword, 'label': 'Current Password', 'type': 'password'} %}
+                    {%~ include 'components/_input.html.twig' with {'field': form_password.newPassword.first, 'label': 'New Password', 'type': 'password'} %}
+                    {%~ include 'components/_input.html.twig' with {'field': form_password.newPassword.second, 'label': 'Confirm Password', 'type': 'password'} %}
+                </div>
+			</div>
+			<div class="flex justify-end">
+				<button type="submit" class="border border-gray-700 font-medium rounded-lg text-xs px-3 py-1.5 text-center border-gray-600 hover:bg-gray-600 focus:ring-gray-800 text-gray-300 hover:text-white" data-dismiss-target="#alert-additional-content-5" aria-label="Close">
+					Confirm
+				</button>
+			</div>
+			{{ form_end(form_password) }}
+
+			<!-- Danger Zone -->
+			<div class="p-4 mb-4 border border-red-800 rounded-lg bg-gray-800 text-red-400 border-red-800">
+				<div class="flex items-center">
+					<svg aria-hidden="true" class="w-5 h-5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+					</svg>
+					<span class="sr-only">Info</span>
+					<h2 class="text-lg font-medium">Danger Zone</h2>
+				</div>
+				<div class="mt-2 mb-4 text-sm">
+					<p>Deleting your account will:</p>
+					<ul class="mt-1.5 ml-4 list-disc list-inside">
+						<li>Delete your profile and all associated data</li>
+						<li>Delete any all content you have, such as posts, comments, etc.</li>
+						<li>Allow your username to become available to anyone</li>
+					</ul>
+				</div>
+				<div class="flex justify-end">
+					<button type="button" class="border border-red-800 font-medium rounded-lg text-xs px-3 py-1.5 text-center hover:bg-red-600 border-red-600 text-red-500 hover:text-white focus:ring-red-800" data-dismiss-target="#alert-additional-content-2" aria-label="Close">
+						Confirm
+					</button>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+{% endblock %}

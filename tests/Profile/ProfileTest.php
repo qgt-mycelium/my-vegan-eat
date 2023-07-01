@@ -42,7 +42,7 @@ class ProfileTest extends WebTestCase
     {
         $crawler = $this->client->request(
             Request::METHOD_GET,
-            $this->urlGenerator->generate('app_profile_index')
+            $this->urlGenerator->generate('app_profile')
         );
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
@@ -60,11 +60,83 @@ class ProfileTest extends WebTestCase
 
         $crawler = $this->client->request(
             Request::METHOD_GET,
-            $this->urlGenerator->generate('app_profile_index')
+            $this->urlGenerator->generate('app_profile')
         );
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Hello '.$this->user->getUsername().'!');
+    }
+
+    // test can account information
+    public function testCanUpdateAccountInformation(): void
+    {
+        $this->client->loginUser($this->user);
+
+        $crawler = $this->client->request(
+            Request::METHOD_GET,
+            $this->urlGenerator->generate('app_profile')
+        );
+
+        $this->assertSelectorExists('form[name="profile"]');
+        $form = $crawler->filter('form[name="profile"]')->form([
+            'profile[username]' => 'new_username',
+            'profile[email]' => 'new_email@myveganeat.com',
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertResponseRedirects($this->urlGenerator->generate('app_profile'));
+        $this->client->followRedirect();
+        $this->assertSelectorTextContains('div[role="alert"]', 'Your profile has been updated!');
+    }
+
+    // test can't change password when old password is wrong
+    public function testCantChangePasswordWhenOldPasswordIsWrong(): void
+    {
+        /** @var User $user */
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'test_change_password']);
+        $this->client->loginUser($user);
+
+        $crawler = $this->client->request(
+            Request::METHOD_GET,
+            $this->urlGenerator->generate('app_profile')
+        );
+
+        $this->assertSelectorExists('form[name="change_password"]');
+        $form = $crawler->filter('form[name="change_password"]')->form([
+            'change_password[oldPassword]' => 'wrong_password',
+            'change_password[newPassword][first]' => 'new_password',
+            'change_password[newPassword][second]' => 'new_password',
+        ]);
+
+        $this->client->submit($form);
+        $this->assertSelectorTextContains('form[name="change_password"]', 'Wrong value for your current password');
+    }
+
+    // test can change password
+    public function testCanChangePassword(): void
+    {
+        /** @var User $user */
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'test_change_password']);
+        $this->client->loginUser($user);
+
+        $crawler = $this->client->request(
+            Request::METHOD_GET,
+            $this->urlGenerator->generate('app_profile')
+        );
+
+        $this->assertSelectorExists('form[name="change_password"]');
+        $form = $crawler->filter('form[name="change_password"]')->form([
+            'change_password[oldPassword]' => 'password',
+            'change_password[newPassword][first]' => 'new_password',
+            'change_password[newPassword][second]' => 'new_password',
+        ]);
+
+        $this->client->submit($form);
+
+        $this->assertResponseRedirects($this->urlGenerator->generate('app_profile'));
+        $this->client->followRedirect();
+        $this->assertSelectorTextContains('div[role="alert"]', 'Your password has been updated!');
     }
 
     /* ---------------- teardown ---------------- */

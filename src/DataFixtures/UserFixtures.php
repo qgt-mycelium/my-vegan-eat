@@ -18,14 +18,15 @@ class UserFixtures extends Fixture
     {
         $faker = \Faker\Factory::create();
         $countUsers = mt_rand(20, 30);
-        $userPasswordTestLoop = mt_rand(1, $countUsers);
+        $userPasswordTestLoop = mt_rand(1, $countUsers - 2);
+        $userChangePasswordTestLoop = $countUsers;
 
         foreach (range(1, $countUsers) as $i) {
             $user = (new User());
             $user->setEmail($faker->email());
-            $user->setUsername($userPasswordTestLoop == $i ? 'test_password' : $faker->userName());
+            $user->setUsername($userPasswordTestLoop == $i ? 'test_password' : ($userChangePasswordTestLoop == $i ? 'test_change_password' : $faker->userName()));
             // Hash the password with the password hasher, but use 'password' as password for the user with the username 'test_password'
-            $user->setPassword($this->passwordHasher->hashPassword($user, $userPasswordTestLoop == $i ? 'password' : $faker->password(6, 20)));
+            $user->setPassword($this->passwordHasher->hashPassword($user, in_array($i, [$userPasswordTestLoop, $userChangePasswordTestLoop]) ? 'password' : $faker->password(6, 20)));
             $manager->persist($user);
             $this->addReference('user_'.$i, $user);
         }

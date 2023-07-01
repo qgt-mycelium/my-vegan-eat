@@ -1,10 +1,42 @@
-{{ form_start(form) }}
-{{ form_row(form.username) }}
-{{ form_row(form.email) }}
-{{ form_row(form.password.first) }}
-{{ form_row(form.password.second) }}
+{% extends('base.html.twig') %}
 
-{# <input type="hidden" name="token" value="{{ csrf_token('register') }}"/> #}
+{% block javascripts %}{% endblock %}
 
-<button type="submit">Register!</button>
-{{ form_end(form) }}
+{% block body_prepend %}
+
+	<div class="container max-w-6xl mx-auto px-4 xl:px-0">
+		<section class="bg-gray-900">
+			<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+				<a href="{{ path('app_home') }}" class="flex items-center mb-6 text-2xl font-semibold text-white">
+					🍃 MyVeganEat
+				</a>
+				<div class="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
+					<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+						<h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
+							Create your Free Account
+						</h1>
+						{{ form_start(form, {'attr': {'class': 'space-y-4 md:space-y-6'}}) }}
+
+                        <!-- Username -->
+                        {%~ include 'components/_input.html.twig' with {'field': form.username, 'label': 'Your Username', 'type': 'text'} %}
+
+						<!-- Email -->
+                        {%~ include 'components/_input.html.twig' with {'field': form.email, 'label': 'Your Email', 'type': 'email'} %}
+
+						<!-- Password -->
+                        {%~ include 'components/_input.html.twig' with {'field': form.password.first, 'label': 'Your Password', 'type': 'password'} %}
+
+						<!-- Confirm Password -->
+                        {%~ include 'components/_input.html.twig' with {'field': form.password.second, 'label': 'Confirm Password', 'type': 'password'} %}
+
+						<button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Register</button>
+
+						{{ form_end(form) }}
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+
+{% endblock %}
