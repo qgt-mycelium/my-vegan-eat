@@ -1,4 +1,4 @@
-// Burger menus
+// Burger menu
 document.addEventListener('DOMContentLoaded', function() {
     const burger = document.getElementById('navbar-burger');
     const menu = document.getElementById('navbar-menu');

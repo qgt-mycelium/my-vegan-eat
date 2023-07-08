@@ -9,9 +9,8 @@
 			'tags': post.tags, 
 			'likes': post.likes,
 			'title': post.title,
-			'link': path('app_post', {
-				slug: post.slug
-			}),
+			'link': path('app_post', { slug: post.slug }),
+			'like_url': path('app_post_like', { slug: post.slug }),
 		} only %}
 	{%~ endfor ~%}
 </div>

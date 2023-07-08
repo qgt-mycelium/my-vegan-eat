@@ -9,4 +9,6 @@
 import './styles/app.css';
 
 // import JS files
+import './js/like.js';
+import './js/modal.js';
 import './js/navbar.js';

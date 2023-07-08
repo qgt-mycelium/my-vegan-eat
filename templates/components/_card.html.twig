@@ -16,7 +16,7 @@
 	<div class="bg-gray-700">
 		<div class="flex justify-end font-medium">
 
-			{%~ include 'components/_like.html.twig' with {'likes': likes} only ~%}
+			{%~ include 'components/_like.html.twig' with {'likes': likes, 'like_url': (like_url ?? '') } only ~%}
 
 		</div>
 	</div>

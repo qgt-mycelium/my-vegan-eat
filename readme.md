@@ -18,18 +18,19 @@
 - Espace d'administration
     - Ajout d'un article *`(recette/plat/lieu/budget/lifestyle)`*
     - Modifier un article
-    - Suprimmer un article
+    - Supprimer un article
     - Lister,paginer, trier et filtrer les articles
     - Gestion des commentaires
 - Espace client
     - Connexion ✔️
     - Inscription ✔️
-    - Liker un article
+    - Liker un article ✔️
     - Commenter un article
     - Modifier son avatar
-    - Modifier ses informations
+    - Modifier ses informations ✔️
+    - Supprimer son compte ✔️
     - Supprimer un commentaire
-    - Pouvoir repondre à un commentaire
+    - Pouvoir répondre à un commentaire
     - Like un commentaire
     - Mettre des articles en favoris
 
@@ -47,11 +48,11 @@
     - Des tags ✔️
     - Une liste de commentaires ✖️
     - SEO
-        - Un title
+        - Un titre
         - Une meta description
 - Un commentaire
     - A un auteur
-    - Est rattché à un article
+    - Est rattaché à un article
     - A une date de publication
     - Peut avoir des likes
     - Peut avoir des commentaires

@@ -139,6 +139,53 @@ class ProfileTest extends WebTestCase
         $this->assertSelectorTextContains('div[role="alert"]', 'Your password has been updated!');
     }
 
+    // test can't delete account when old password is wrong
+    public function testCantDeleteAccountWhenOldPasswordIsWrong(): void
+    {
+        /** @var User user */
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'test_change_password']);
+        $this->client->loginUser($user);
+
+        $crawler = $this->client->request(
+            Request::METHOD_GET,
+            $this->urlGenerator->generate('app_profile')
+        );
+
+        $this->assertSelectorExists('form[name="delete_account"]');
+        $form = $crawler->filter('form[name="delete_account"]')->form([
+            'delete_account[oldPassword]' => '123456',
+        ]);
+
+        $this->client->submit($form);
+        $this->assertSelectorTextContains('form[name="delete_account"]', 'Wrong value for your current password');
+    }
+
+    // test can delete account
+    public function testCanDeleteAccount(): void
+    {
+        /** @var User user */
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'test_change_password']);
+        $this->client->loginUser($user);
+
+        $crawler = $this->client->request(
+            Request::METHOD_GET,
+            $this->urlGenerator->generate('app_profile')
+        );
+
+        $this->assertSelectorExists('form[name="delete_account"]');
+        $form = $crawler->filter('form[name="delete_account"]')->form([
+            'delete_account[oldPassword]' => 'new_password',
+        ]);
+
+        $this->client->submit($form);
+        $this->client->followRedirect();
+        $this->assertEquals(
+            $this->urlGenerator->generate('app_login'),
+            $this->client->getRequest()->server->get('REQUEST_URI')
+        );
+        $this->assertSelectorTextContains('body', 'Your account has been deleted!');
+    }
+
     /* ---------------- teardown ---------------- */
     protected function tearDown(): void
     {

@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\FormInterface;
 
 class ChangePasswordType extends AbstractType
 {
@@ -24,13 +25,20 @@ class ChangePasswordType extends AbstractType
         ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
             'csrf_token_id' => 'change_password',
             'current_password_is_required' => false,
+            'validation_groups' => function (FormInterface $form) {
+                if ($form->getConfig()->getOption('current_password_is_required')) {
+                    return ['Default', 'ChangePassword'];
+                }
+
+                return ['Default'];
+            },
         ]);
     }
 }

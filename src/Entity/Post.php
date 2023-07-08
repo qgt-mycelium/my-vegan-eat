@@ -223,4 +223,11 @@ class Post
 
         return $this;
     }
+
+    /* ---------- Other ---------- */
+
+    public function isLikedByUser(User $user): bool
+    {
+        return $this->likes->contains($user);
+    }
 }
