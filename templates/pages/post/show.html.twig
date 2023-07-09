@@ -20,6 +20,13 @@
             </div>
         </div>
     </div>
+
+    <div class="divide-y divide-gray-700">
+        {% for comment in comments %}
+            {% include 'components/_comment.html.twig' with {'comment': comment} only %}
+        {% endfor %}
+    </div>
+
 </div>
 
 {% endblock %}

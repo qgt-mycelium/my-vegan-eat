@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/posts/{slug}', name: 'app_post', methods: ['GET'])]
-    public function show(Post $post): Response
+    public function show(Post $post, CommentRepository $commentRepository): Response
     {
         return $this->render('pages/post/show.html.twig', [
             'post' => $post,
@@ -30,6 +31,7 @@ class PostController extends AbstractController
                 'title' => $post->getTitle(),
                 'slogan' => '',
             ],
+            'comments' => $commentRepository->findCommentsFromPost($post),
         ]);
     }
 

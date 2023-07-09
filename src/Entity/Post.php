@@ -48,6 +48,10 @@ class Post
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'posts')]
     private Collection $categories;
 
+    /** @var Collection<Comment> $comments */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', orphanRemoval: true)]
+    private Collection $comments;
+
     /* ---------- Constructor ---------- */
 
     public function __construct()
@@ -55,6 +59,7 @@ class Post
         $this->likes = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /* ---------- Getters and setters ---------- */
@@ -220,6 +225,44 @@ class Post
     public function setCategories(array $categories): Post
     {
         $this->categories = new ArrayCollection($categories);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): Post
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): Post
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            $comment->setPost(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Comment[] $comments
+     */
+    public function setComments(array $comments): Post
+    {
+        $this->comments = new ArrayCollection($comments);
 
         return $this;
     }

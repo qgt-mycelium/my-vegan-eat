@@ -90,7 +90,7 @@ class CategoryRepository extends ServiceEntityRepository
             ->select('c', 'p')
             ->join('c.posts', 'p')
             ->where('c.id IN (:categories_ids)')
-            ->setParameter('categories_ids', $categories)
+            ->setParameter('categories_ids', $categoriesIds)
             ->getQuery()
             ->getResult();
 
