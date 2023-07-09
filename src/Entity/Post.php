@@ -237,26 +237,6 @@ class Post
         return $this->comments;
     }
 
-    public function addComment(Comment $comment): Post
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setPost($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): Post
-    {
-        if ($this->comments->contains($comment)) {
-            $this->comments->removeElement($comment);
-            $comment->setPost(null);
-        }
-
-        return $this;
-    }
-
     /**
      * @param Comment[] $comments
      */

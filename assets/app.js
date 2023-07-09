@@ -12,3 +12,4 @@ import './styles/app.css';
 import './js/like.js';
 import './js/modal.js';
 import './js/navbar.js';
+import './js/comment.js';

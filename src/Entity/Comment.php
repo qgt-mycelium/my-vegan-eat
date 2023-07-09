@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CommentRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
@@ -15,6 +16,7 @@ class Comment
     #[ORM\Column(type: 'integer')]
     private int $id;
 
+    #[Assert\NotBlank]
     #[ORM\Column(type: 'text')]
     private string $content;
 
@@ -28,11 +30,11 @@ class Comment
     private \DateTimeInterface $createdAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private User $author;
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Post $post;
 
     /** @var Collection<User> $likes */
@@ -60,9 +62,7 @@ class Comment
     /* ---------- Getters and setters ---------- */
 
     /**
-     * Get the value of id
-     *
-     * @return int
+     * Get the value of id.
      */
     public function getId(): int
     {
@@ -70,9 +70,7 @@ class Comment
     }
 
     /**
-     * Get the value of content
-     *
-     * @return string
+     * Get the value of content.
      */
     public function getContent(): string
     {
@@ -80,11 +78,7 @@ class Comment
     }
 
     /**
-     * Set the value of content
-     *
-     * @param string $content
-     *
-     * @return self
+     * Set the value of content.
      */
     public function setContent(string $content): self
     {
@@ -94,9 +88,7 @@ class Comment
     }
 
     /**
-     * Get the value of isPublished
-     *
-     * @return bool
+     * Get the value of isPublished.
      */
     public function getIsPublished(): bool
     {
@@ -104,11 +96,7 @@ class Comment
     }
 
     /**
-     * Set the value of isPublished
-     *
-     * @param bool $isPublished
-     *
-     * @return self
+     * Set the value of isPublished.
      */
     public function setIsPublished(bool $isPublished): self
     {
@@ -118,9 +106,7 @@ class Comment
     }
 
     /**
-     * Get the value of isDeleted
-     *
-     * @return bool
+     * Get the value of isDeleted.
      */
     public function getIsDeleted(): bool
     {
@@ -128,11 +114,7 @@ class Comment
     }
 
     /**
-     * Set the value of isDeleted
-     *
-     * @param bool $isDeleted
-     *
-     * @return self
+     * Set the value of isDeleted.
      */
     public function setIsDeleted(bool $isDeleted): self
     {
@@ -142,9 +124,7 @@ class Comment
     }
 
     /**
-     * Get the value of createdAt
-     *
-     * @return \DateTimeInterface
+     * Get the value of createdAt.
      */
     public function getCreatedAt(): \DateTimeInterface
     {
@@ -152,11 +132,7 @@ class Comment
     }
 
     /**
-     * Set the value of createdAt
-     *
-     * @param \DateTimeInterface $createdAt
-     *
-     * @return self
+     * Set the value of createdAt.
      */
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
@@ -166,9 +142,7 @@ class Comment
     }
 
     /**
-     * Get the value of author
-     *
-     * @return User
+     * Get the value of author.
      */
     public function getAuthor(): User
     {
@@ -176,11 +150,7 @@ class Comment
     }
 
     /**
-     * Set the value of author
-     *
-     * @param User $author
-     *
-     * @return self
+     * Set the value of author.
      */
     public function setAuthor(User $author): self
     {
@@ -190,9 +160,7 @@ class Comment
     }
 
     /**
-     * Get the value of post
-     *
-     * @return Post
+     * Get the value of post.
      */
     public function getPost(): Post
     {
@@ -200,13 +168,9 @@ class Comment
     }
 
     /**
-     * Set the value of post
-     *
-     * @param Post|null $post
-     *
-     * @return self
+     * Set the value of post.
      */
-    public function setPost(?Post $post): self
+    public function setPost(Post $post): self
     {
         $this->post = $post;
 

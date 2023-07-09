@@ -20,7 +20,10 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = \Faker\Factory::create();
 
+        /** @var User[] $users */
         $users = $this->entityManager->getRepository(User::class)->findAll();
+
+        /** @var Post[] $posts */
         $posts = $this->entityManager->getRepository(Post::class)->findAll();
 
         // Create a random number of comments (between 10 and 15) with random data and add likes and comments
@@ -29,8 +32,15 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
             $comment->setContent($faker->realText(mt_rand(10, 50)));
             $comment->setIsPublished($faker->boolean(80));
             $comment->setIsDeleted($faker->boolean(20));
-            $comment->setAuthor($faker->randomElement($users));
-            $comment->setPost($faker->randomElement($posts));
+
+            /** @var User $user */
+            $user = $faker->randomElement($users);
+            $comment->setAuthor($user);
+
+            /** @var Post $post */
+            $post = $faker->randomElement($posts);
+            $comment->setPost($post);
+
             // Add between 1 and 5 likes to the comment (if there are any users)
             if (1 == mt_rand(0, 1)) {
                 foreach (range(1, mt_rand(1, 5)) as $j) {
@@ -46,7 +56,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
             // Add between 1 and 3 child comments to the comment (if there are any users)
             if (1 == mt_rand(0, 1)) {
                 $this->addComments($manager, $comment, mt_rand(1, 3));
-            }            
+            }
         }
 
         $manager->flush();
@@ -63,7 +73,11 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
             $childComment->setContent($faker->realText(mt_rand(10, 50)));
             $childComment->setIsPublished($faker->boolean(80));
             $childComment->setIsDeleted($faker->boolean(20));
-            $childComment->setAuthor($faker->randomElement($users));
+
+            /** @var User $user */
+            $user = $faker->randomElement($users);
+            $childComment->setAuthor($user);
+
             $childComment->setPost($comment->getPost());
             $childComment->setParent($comment);
             $manager->persist($childComment);

@@ -25,12 +25,12 @@
     - Connexion ✔️
     - Inscription ✔️
     - Liker un article ✔️
-    - Commenter un article
+    - Commenter un article ✔️
     - Modifier son avatar
     - Modifier ses informations ✔️
     - Supprimer son compte ✔️
-    - Supprimer un commentaire
-    - Pouvoir répondre à un commentaire
+    - Supprimer un commentaire ✔️
+    - Pouvoir répondre à un commentaire ✔️
     - Like un commentaire
     - Mettre des articles en favoris
 
@@ -51,11 +51,11 @@
         - Un titre
         - Une meta description
 - Un commentaire
-    - A un auteur
-    - Est rattaché à un article
-    - A une date de publication
-    - Peut avoir des likes
-    - Peut avoir des commentaires
+    - A un auteur ✔️
+    - Est rattaché à un article ✔️
+    - A une date de publication ✔️
+    - Peut avoir des likes ✔️
+    - Peut avoir des commentaires ✔️
 
 ## 🌿 Comment tester
 ```sh

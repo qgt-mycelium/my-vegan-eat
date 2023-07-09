@@ -31,7 +31,7 @@ class CommentRepository extends ServiceEntityRepository
             ->setParameters([
                 ':isPublished' => true,
                 ':isDeleted' => false,
-                ':post' => $post
+                ':post' => $post,
             ])
             ->orderBy('c.createdAt', 'DESC')
         ;
@@ -42,7 +42,7 @@ class CommentRepository extends ServiceEntityRepository
         $this->hydrateComments($comments);
 
         $comments = array_filter($comments, function ($comment) {
-            return $comment->getParent() === null;
+            return null === $comment->getParent();
         });
 
         return $comments;
@@ -72,7 +72,7 @@ class CommentRepository extends ServiceEntityRepository
             ->setParameters([
                 ':comments_ids' => $commentsIds,
                 ':isPublished' => true,
-                ':isDeleted' => false
+                ':isDeleted' => false,
             ])
             ->getQuery()
             ->getResult();

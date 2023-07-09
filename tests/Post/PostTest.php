@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Category;
+namespace App\Tests\Post;
 
 use App\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
