@@ -24,7 +24,8 @@ class CommentRepository extends ServiceEntityRepository
     public function findCommentsFromPost(Post $post): array
     {
         $query = $this->createQueryBuilder('c')
-            ->select('c')
+            ->select('c', 'l')
+            ->leftJoin('c.likes', 'l')
             ->where('c.isPublished = :isPublished')
             ->andWhere('c.isDeleted = :isDeleted')
             ->andWhere('c.post = :post')
@@ -48,7 +49,7 @@ class CommentRepository extends ServiceEntityRepository
         return $comments;
     }
 
-     /* ---------- Hydrate functions ---------- */
+    /* ---------- Hydrate functions ---------- */
 
     /**
      * Hydrate the posts of the given categories.

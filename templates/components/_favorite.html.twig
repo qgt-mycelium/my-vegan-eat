@@ -1,0 +1,11 @@
+<!-- START: Favorite button -->
+<button {% if app.user %}data-action="favorite" data-url="{{ favorite_url ?? '' }}"{% endif %} class="flex items-center text-xs font-medium {{ class ?? 'px-3 py-2 bg-gray-800 border-l border-gray-600 hover:text-white' }}">
+	<svg aria-hidden="true" class="w-4 h-4 filled {{ app.user in favorites ? '' : 'hidden' }}" fill="currentColor" viewbox="0 0 24 20" xmlns="http://www.w3.org/2000/svg">
+		<path fill-rule="evenodd" d="M10 18l-1.45-1.32C4.4 13.2 1 10.13 1 6.5 1 3.42 3.42 1 6.5 1c1.74 0 3.37.85 4.5 2.16C12.63 1.85 14.26 1 16 1 19.08 1 21.5 3.42 21.5 6.5c0 3.63-3.4 6.7-8.55 10.18L10 18z" clip-rule="evenodd"></path>
+	</svg>
+	<svg aria-hidden="true" class="w-4 h-4 unfilled {{ app.user in favorites ? 'hidden' : '' }}" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 20" xmlns="http://www.w3.org/2000/svg">
+		<path fill-rule="evenodd" d="M10 18l-1.45-1.32C4.4 13.2 1 10.13 1 6.5 1 3.42 3.42 1 6.5 1c1.74 0 3.37.85 4.5 2.16C12.63 1.85 14.26 1 16 1 19.08 1 21.5 3.42 21.5 6.5c0 3.63-3.4 6.7-8.55 10.18L10 18z" clip-rule="evenodd"></path>
+	</svg>
+    <span class="ml-2">{{ favorites | length }}</span>
+</button>
+<!-- END: Favorite button -->

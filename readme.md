@@ -19,43 +19,43 @@
     - Ajout d'un article *`(recette/plat/lieu/budget/lifestyle)`*
     - Modifier un article
     - Supprimer un article
-    - Lister,paginer, trier et filtrer les articles
+    - Lister, paginer, trier et filtrer les articles
     - Gestion des commentaires
 - Espace client
-    - Connexion ✔️
-    - Inscription ✔️
-    - Liker un article ✔️
-    - Commenter un article ✔️
+    - Connexion
+    - Inscription
+    - Liker un article
+    - Commenter un article
     - Modifier son avatar
-    - Modifier ses informations ✔️
-    - Supprimer son compte ✔️
-    - Supprimer un commentaire ✔️
-    - Pouvoir répondre à un commentaire ✔️
+    - Modifier ses informations
+    - Supprimer son compte
+    - Supprimer un commentaire
+    - Pouvoir répondre à un commentaire
     - Like un commentaire
     - Mettre des articles en favoris
 
 ## 🎒 Règles métier
 - Un utilisateur possède
-    - Une adresse mail ✔️ 
-    - Un pseudo ✔️
-    - Un mot de passe ✔️
-    - Un avatar ✖️
+    - Une adresse mail
+    - Un pseudo
+    - Un mot de passe
+    - Un avatar
 - Un article possède
-    - Un titre ✔️
-    - Un contenu ✔️
-    - Une date de publication ✔️
-    - Des likes ✔️
-    - Des tags ✔️
-    - Une liste de commentaires ✖️
+    - Un titre
+    - Un contenu
+    - Une date de publication
+    - Des likes
+    - Des tags
+    - Une liste de commentaires
     - SEO
         - Un titre
         - Une meta description
 - Un commentaire
-    - A un auteur ✔️
-    - Est rattaché à un article ✔️
-    - A une date de publication ✔️
-    - Peut avoir des likes ✔️
-    - Peut avoir des commentaires ✔️
+    - A un auteur
+    - Est rattaché à un article
+    - A une date de publication
+    - Peut avoir des likes
+    - Peut avoir des commentaires
 
 ## 🌿 Comment tester
 ```sh

@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ post.seoTitle }}{% endblock %}
+{% block meta_description %}{{ post.seoDescription }}{% endblock %}
+
 {% block body %}
 
 	<div class="container max-w-3xl mx-auto py-6 px-4 xl:px-0">
@@ -40,7 +43,8 @@
 				{% endif ~%}
 				<p class="text-gray-300">{{ post.content }}</p>
 				<div class="flex justify-end font-medium text-gray-300 mt-4 lg:mt-6">
-					{%~ include 'components/_like.html.twig' with {'likes': post.likes, 'like_url': path('app_post_like', {slug: post.slug}) } only ~%}
+					{%~ include 'components/_favorite.html.twig' with {'favorites': post.favorites, 'favorite_url': path('app_post_favorite', {slug: post.slug})} only ~%}
+					{%~ include 'components/_like.html.twig' with {'likes': post.likes, 'like_url': path('app_post_like', {slug: post.slug})} only ~%}
 				</div>
 			</div>
 		</div>

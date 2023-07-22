@@ -1,8 +1,10 @@
 <div>
-	<div class="p-6 mb-6 text-base bg-gray-900">
+	<div class="p-6 text-base bg-gray-900">
 		<div class="flex justify-between items-center mb-4">
 			<div class="flex items-center">
-				<p class="inline-flex items-center mr-3 text-sm text-white"><img class="mr-2 w-6 h-6 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-2.jpg" alt="Michael Gough">{{ comment.author.username }}</p>
+				<p class="inline-flex items-center mr-3 text-sm text-white">
+					<img class="mr-2 w-6 h-6 rounded-full" src='{{ comment.author.avatarFileName ? asset("/media/users/#{comment.author.avatarFileName}") : "https://t3.ftcdn.net/jpg/03/49/45/70/360_F_349457036_XWvovNpNk79ftVg4cIpBhJurdihVoJ2B.jpg" }}' alt="{{ comment.author.id }}">{{ comment.author.username }}
+				</p>
 				<p class="text-sm text-gray-400">
 					<time pubdate datetime="2022-02-08" title="February 8th, 2022">{{ comment.createdAt | date("F jS, Y \\a\\t g:ia") ~ ' (UTC)' }}</time>
 				</p>
@@ -10,25 +12,37 @@
 		</div>
 		<p class="text-gray-400">{{ comment.content }}</p>
 		<div class="flex items-center mt-4 space-x-4">
-			{% if app.user == comment.author %}
-			<form name="comment_delete" method="POST" action="{{ path('app_post_comment_delete', {'id': comment.id}) }}">
-				<input type="hidden" name="comment_id" value="{{ comment.id }}">
-				<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
-				<button type="submit" class="flex items-center text-sm hover:underline text-gray-400">
-					Delete
-				</button>
-			</form>
-			{% endif %}
+			{%~ include 'components/_like.html.twig' with {
+					'likes': comment.likes, 
+					'like_url': path('app_post_comment_like', {id: comment.id}), 
+					'class': 'hover:text-white text-gray-400'
+				} only ~%}
 			{% if app.user %}
-			<button type="button" data-comment-id="{{ comment.id }}" data-url="{{ path('app_post_comment_reply', {'id': comment.id}) }}" class="reply-comment flex items-center text-sm hover:underline text-gray-400">
-				<svg aria-hidden="true" class="mr-1 w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-				</svg>
-				Reply
-			</button>
-			<div id="reply-comment-{{ comment.id }}" class="w-full"></div>
+				<button type="button" data-comment-id="{{ comment.id }}" data-url="{{ path('app_post_comment_reply', {'id': comment.id}) }}" class="reply-comment flex items-center text-sm hover:underline text-gray-400">
+					<svg aria-hidden="true" class="mr-1 w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+					</svg>
+					Reply
+				</button>
+			{% endif %}
+			{% if app.user == comment.author %}
+				<div class="flex items-center text-gray-400">
+					<svg aria-hidden="true" class="mr-1 w-4 h-4" fill="currentColor" stroke="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+					</svg>
+					<form name="comment_delete" method="POST" action="{{ path('app_post_comment_delete', {'id': comment.id}) }}">
+						<input type="hidden" name="comment_id" value="{{ comment.id }}">
+						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+						<button type="submit" class="flex items-center text-sm hover:underline text-gray-400">
+							Delete
+						</button>
+					</form>
+				</div>
 			{% endif %}
 		</div>
+		{% if app.user %}
+			<div id="reply-comment-{{ comment.id }}" class="w-full"></div>
+		{% endif %}
 	</div>
 
 	{% for child in comment.comments %}

@@ -3,6 +3,7 @@
 namespace App\Tests\Post;
 
 use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -53,6 +54,21 @@ class PostTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $post->getTitle());
+    }
+
+    public function testFavoritePageIsUp(): void
+    {
+        /** @var User $user */
+        $user = $this->entityManager->getRepository(User::class)->findOneBy([]);
+
+        $this->client->loginUser($user);
+
+        $crawler = $this->client->request(
+            Request::METHOD_GET,
+            $this->urlGenerator->generate('app_posts_favorite')
+        );
+
+        $this->assertResponseIsSuccessful();
     }
 
     public function testPostPageIsUpWithNonExistentPost(): void

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Tag;
 use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -17,13 +18,34 @@ class PostRepository extends ServiceEntityRepository
     /* ---------- Custom queries ---------- */
 
     /**
-     * Find popular posts ordered by most liked.
-     *
-     * @param int|null $maxResults
+     * Find favorite posts for a user.
      *
      * @return Post[]
      */
-    public function findPopularOrderedByMostLiked(int|null $maxResults = null): array
+    public function findFavoritePostsForUser(User $user): array
+    {
+        /** @var Post[] $posts */
+        $posts = $this->createQueryBuilder('p')
+            ->select('p')
+            ->join('p.favorites', 'f')
+            ->where('f.id = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+
+        $this->hydrateTags($posts);
+        $this->hydrateLikes($posts);
+        $this->hydrateFavorites($posts);
+
+        return $posts;
+    }
+
+    /**
+     * Find popular posts ordered by most liked.
+     *
+     * @return Post[]
+     */
+    public function findPopularOrderedByMostLiked(int $maxResults = null): array
     {
         /** @var Post[] $posts */
         $posts = $this->createQueryBuilder('p')
@@ -42,11 +64,9 @@ class PostRepository extends ServiceEntityRepository
     /**
      * Find published posts ordered by newest.
      *
-     * @param int|null $maxResults
-     *
      * @return Post[]
      */
-    public function findPublishedOrderedByNewest(int|null $maxResults = null): array
+    public function findPublishedOrderedByNewest(int $maxResults = null): array
     {
         $query = $this->createQueryBuilder('p')
             ->select('p')
@@ -59,6 +79,7 @@ class PostRepository extends ServiceEntityRepository
 
         $this->hydrateTags($posts);
         $this->hydrateLikes($posts);
+        $this->hydrateFavorites($posts);
 
         return $posts;
     }
@@ -116,6 +137,42 @@ class PostRepository extends ServiceEntityRepository
         // Set the likes of each post
         foreach ($posts as $post) {
             $post->setLikes($likesByPostId[$post->getId()] ?? []);
+        }
+    }
+
+    /**
+     * Hydrate the favorites of the posts.
+     *
+     * @param Post[] $posts
+     */
+    public function hydrateFavorites($posts): void
+    {
+        // Get the posts ids
+        $postsIds = array_map(function ($post) {
+            return $post->getId();
+        }, $posts);
+
+        // Get the posts with their favorites
+        /** @var Post[] $postWithFavorites */
+        $postWithFavorites = $this->createQueryBuilder('p')
+            ->select('p', 'f')
+            ->join('p.favorites', 'f')
+            ->where('p.id IN (:posts_ids)')
+            ->setParameter('posts_ids', $postsIds)
+            ->getQuery()
+            ->getResult();
+
+        // Create an array with the post id as key and an array of favorites as value
+        $favoritesByPostId = [];
+        foreach ($postWithFavorites as $post) {
+            foreach ($post->getFavorites() as $favorite) {
+                $favoritesByPostId[$post->getId()][] = $favorite;
+            }
+        }
+
+        // Set the favorites of each post
+        foreach ($posts as $post) {
+            $post->setFavorites($favoritesByPostId[$post->getId()] ?? []);
         }
     }
 }

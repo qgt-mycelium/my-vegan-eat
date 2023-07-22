@@ -9,7 +9,7 @@
 import './styles/app.css';
 
 // import JS files
-import './js/like.js';
+import './js/comment.js';
+import './js/like_and_favorite.js';
 import './js/modal.js';
 import './js/navbar.js';
-import './js/comment.js';

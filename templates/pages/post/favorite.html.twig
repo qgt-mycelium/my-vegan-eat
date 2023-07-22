@@ -12,6 +12,10 @@
                 'like_url': path('app_post_like', { slug: post.slug }),
                 'favorite_url': path('app_post_favorite', { slug: post.slug }),
             } only %}
+		{% else %}
+			<div class="container max-w-6xl text-center mx-auto py-6 px-4 xl:px-0">
+				<p class="text-white">There are no posts yet.</p>
+			</div>
 		{% endfor %}
 	</div>
 {% endblock %}

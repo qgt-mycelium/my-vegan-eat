@@ -53,6 +53,7 @@ class ProfileController extends AbstractController
                     $user,
                     $form_password->get('newPassword')->getData()
                 ));
+                $user->setLastPasswordChangeAt(new \DateTime('now'));
                 // 4. Save the User!
                 $entityManager->persist($user);
                 $entityManager->flush();

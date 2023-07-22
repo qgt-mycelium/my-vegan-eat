@@ -32,13 +32,15 @@ class Post
     #[Assert\Length(min: 20)]
     private string $content;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private \DateTimeInterface|null $publishedAt;
-
     /** @var Collection<User> $likes */
     #[ORM\ManyToMany(targetEntity: User::class)]
     #[ORM\JoinTable(name: 'post_like')]
     private Collection $likes;
+
+    /** @var Collection<User> $favorites */
+    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\JoinTable(name: 'post_favorite')]
+    private Collection $favorites;
 
     /** @var Collection<Tag> $tags */
     #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'posts')]
@@ -52,11 +54,21 @@ class Post
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', orphanRemoval: true)]
     private Collection $comments;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $seoTitle = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $seoDescription = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private \DateTimeInterface|null $publishedAt;
+
     /* ---------- Constructor ---------- */
 
     public function __construct()
     {
         $this->likes = new ArrayCollection();
+        $this->favorites = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->comments = new ArrayCollection();
@@ -95,6 +107,14 @@ class Post
     public function getLikes(): Collection
     {
         return $this->likes;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getFavorites(): Collection
+    {
+        return $this->favorites;
     }
 
     public function setTitle(string $title): Post
@@ -149,6 +169,34 @@ class Post
     public function setLikes(array $likes): Post
     {
         $this->likes = new ArrayCollection($likes);
+
+        return $this;
+    }
+
+    public function addFavorite(User $user): Post
+    {
+        if (!$this->favorites->contains($user)) {
+            $this->favorites->add($user);
+        }
+
+        return $this;
+    }
+
+    public function removeFavorite(User $user): Post
+    {
+        if ($this->favorites->contains($user)) {
+            $this->favorites->removeElement($user);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param User[] $favorites
+     */
+    public function setFavorites(array $favorites): Post
+    {
+        $this->favorites = new ArrayCollection($favorites);
 
         return $this;
     }
@@ -247,10 +295,39 @@ class Post
         return $this;
     }
 
+    public function getSeoTitle(): ?string
+    {
+        return $this->seoTitle;
+    }
+
+    public function setSeoTitle(?string $seoTitle): Post
+    {
+        $this->seoTitle = $seoTitle;
+
+        return $this;
+    }
+
+    public function getSeoDescription(): ?string
+    {
+        return $this->seoDescription;
+    }
+
+    public function setSeoDescription(?string $seoDescription): Post
+    {
+        $this->seoDescription = $seoDescription;
+
+        return $this;
+    }
+
     /* ---------- Other ---------- */
 
     public function isLikedByUser(User $user): bool
     {
         return $this->likes->contains($user);
+    }
+
+    public function isFavoritedByUser(User $user): bool
+    {
+        return $this->favorites->contains($user);
     }
 }

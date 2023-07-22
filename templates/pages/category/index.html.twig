@@ -30,8 +30,10 @@
 			'tags': post.tags, 
 			'likes': post.likes,
 			'title': post.title,
+			'favorites': post.favorites,
 			'link': path('app_post', { slug: post.slug }),
 			'like_url': path('app_post_like', { slug: post.slug }),
+			'favorite_url': path('app_post_favorite', { slug: post.slug }),
 		} only %}
 	{% endfor ~%}
 </div>

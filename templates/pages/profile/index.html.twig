@@ -45,9 +45,22 @@
 			</div>
 			<div class="mt-2 text-sm text-gray-300">
 				<p>
-					Your account was created
-					<time datetime="{{ 'now' }}">{{ 'now' | date("F jS, Y \\a\\t g:ia") ~ ' (UTC)' }}</time>.
+					{% if app.user.updatedAt %}
+						Your account was updated on
+						<time datetime="{{ app.user.updatedAt | date("F jS, Y \\a\\t g:ia") ~ ' (UTC)' }}">{{ app.user.updatedAt | date("F jS, Y \\a\\t g:ia") ~ ' (UTC)' }}</time>.
+					{% else %}
+						Your account was never updated.
+					{% endif %}
 				</p>
+				<figure class="my-4">
+					{{ form_label(form_account.avatarFile, 'Avatar', {'label_attr': {'class': 'block text-sm font-medium text-white mb-2'}}) }}
+					<div class="flex items-center">
+						<img class="h-32 w-32 rounded-lg" src="{{ form_account.avatarFile.vars.image_uri ?? 'https://t3.ftcdn.net/jpg/03/49/45/70/360_F_349457036_XWvovNpNk79ftVg4cIpBhJurdihVoJ2B.jpg' }}" alt="image description">
+						<figcaption class="ml-4 text-sm text-center text-gray-500 dark:text-gray-400">
+							{%~ include 'components/_input.html.twig' with {'field': form_account.avatarFile, 'label': false, 'type': 'file', required: false, accept: 'image/*'} %}
+						</figcaption>
+					</div>
+				</figure>
 				<div class="my-4 grid sm:grid-cols-2 mt-6 grid-col-auto gap-4 items-end">
 					{%~ include 'components/_input.html.twig' with {'field': form_account.username, 'label': 'Your Username', 'type': 'text'} %}
 					{%~ include 'components/_input.html.twig' with {'field': form_account.email, 'label': 'Your Email', 'type': 'email'} %}
@@ -71,8 +84,12 @@
 			</div>
 			<div class="mt-2 mb-4 text-sm text-gray-300">
 				<p>
-					Your password was last updated
-					<time datetime="now">{{ 'now' | date("F jS, Y \\a\\t g:ia") ~ ' (UTC)' }}</time>.
+					{% if app.user.lastPasswordChangeAt %}
+						Your password was last updated on
+						<time datetime="{{ app.user.lastPasswordChangeAt | date("F jS, Y \\a\\t g:ia") ~ ' (UTC)' }}">{{ app.user.lastPasswordChangeAt | date("F jS, Y \\a\\t g:ia") ~ ' (UTC)' }}</time>.
+					{% else %}
+						Your password was never updated.
+					{% endif %}
 				</p>
 				<div class="my-4 grid sm:grid-cols-2 mt-6 grid-col-auto gap-4 items-end">
 					{% if form_password.oldPassword is defined %}
@@ -107,13 +124,7 @@
 					</ul>
 
 					<!-- Modal -->
-					<aside 
-						id="delete-account-modal" 
-						aria-hidden="{{ open_modal_delete_account ? 'false' : 'true' }}" 
-						role="dialog" 
-						aria-labelledby="title-{{ id ?? 'modal' }}" 
-						class="fixed inset-0 z-50 {{ open_modal_delete_account ? '' : 'hidden' }} w-full p-4 overflow-x-hidden overflow-y-auto h-full bg-[rgba(0,0,0,0.5)]"
-					>
+					<aside id="delete-account-modal" aria-hidden="{{ open_modal_delete_account ? 'false' : 'true' }}" role="dialog" aria-labelledby="title-{{ id ?? 'modal' }}" class="fixed inset-0 z-50 {{ open_modal_delete_account ? '' : 'hidden' }} w-full p-4 overflow-x-hidden overflow-y-auto h-full bg-[rgba(0,0,0,0.5)]">
 						<div
 							class="relative w-full max-w-md max-h-full m-auto overflow-x-hidden overflow-y-auto">
 							<!-- Modal content -->

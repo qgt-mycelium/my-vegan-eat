@@ -140,4 +140,56 @@ class PostController extends AbstractController
 
         return $this->redirectToRoute('app_post', ['slug' => $comment->getPost()->getSlug()]);
     }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/comment/{id}/like', name: 'app_post_comment_like', methods: ['POST'], condition: 'request.isXmlHttpRequest()')]
+    public function likeComment(Comment $comment, EntityManagerInterface $entityManager): JsonResponse
+    {
+        /** @var \App\Entity\User */
+        $user = $this->getUser();
+
+        if ($comment->isLikedByUser($user)) {
+            $comment->removeLike($user);
+        } else {
+            $comment->addLike($user);
+        }
+
+        $entityManager->flush();
+
+        return $this->json($comment->getLikes()->count());
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/favorites', name: 'app_posts_favorite', methods: ['GET'])]
+    public function favoritePosts(PostRepository $postRepository): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return $this->render('pages/post/favorite.html.twig', [
+            'posts' => $postRepository->findFavoritePostsForUser($user),
+            'banner' => [
+                'title' => '💛 My favorite posts',
+                'slogan' => 'Here are the posts you have marked as favorites.',
+            ],
+        ]);
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/posts/{slug}/favorite', name: 'app_post_favorite', methods: ['POST'], condition: 'request.isXmlHttpRequest()')]
+    public function favorite(Post $post, EntityManagerInterface $entityManager): JsonResponse
+    {
+        /** @var User */
+        $user = $this->getUser();
+
+        if ($post->isFavoritedByUser($user)) {
+            $post->removeFavorite($user);
+        } else {
+            $post->addFavorite($user);
+        }
+
+        $entityManager->flush();
+
+        return $this->json($post->getFavorites()->count());
+    }
 }

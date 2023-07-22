@@ -1,7 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     const likeElements = document.querySelectorAll('button[data-action="like"]');
-    likeElements.forEach(likeElement => {
-        likeElement.addEventListener('click', function () {
+    const favoriteElements = document.querySelectorAll('button[data-action="favorite"]');
+
+    initToggleButtonsAction(likeElements);
+    initToggleButtonsAction(favoriteElements);
+});
+
+function initToggleButtonsAction(elems) 
+{
+    elems.forEach(elem => {
+        elem.addEventListener('click', function () {
             const url = this.dataset.url;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', url, true);
@@ -10,13 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (xhr.readyState !== 4) return;
 
                 if (xhr.status === 200) {
-                    const likeCount = JSON.parse(xhr.responseText);
-                    likeElement.querySelector('span').innerHTML = likeCount;
+                    const count = JSON.parse(xhr.responseText);
+                    elem.querySelector('span').innerHTML = count;
 
-                    console.log(likeElement);
-
-                    const thumbsUpFilled = likeElement.querySelector('svg.filled');
-                    const thumbsUpUnfilled = likeElement.querySelector('svg.unfilled');
+                    const thumbsUpFilled = elem.querySelector('svg.filled');
+                    const thumbsUpUnfilled = elem.querySelector('svg.unfilled');
 
                     thumbsUpFilled.classList.toggle('hidden');
                     thumbsUpUnfilled.classList.toggle('hidden');
@@ -28,4 +34,4 @@ document.addEventListener('DOMContentLoaded', function() {
             xhr.send();
         });
     });
-});
+}

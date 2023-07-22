@@ -11,15 +11,17 @@
 			</svg>
 		</button>
 		<div id="navbar-menu" class="items-center justify-between font-medium hidden w-full md:flex md:w-auto md:order-1">
-			<ul class="flex flex-col p-4 md:p-0 mt-4 border border-gray-700 rounded-lg bg-gray-800 md:flex-row md:space-x-8 md:mt-0 md:border-0">
+			<ul class="flex flex-col p-4 md:p-0 mt-4 border border-gray-700 rounded-lg bg-gray-800 md:flex-row md:space-x-8 md:mt-0 md:border-0 items-center">
 				<!-- START: Menu -->
 				{% set _route = app.request.attributes.get('_route') %}
 				{% for item in [
 					{ route: 'app_home', label: 'Home' },
 					{ route: 'app_category', label: 'Recipes', parameters: {slug: 'recipes'} },
 					{ route: 'app_categories', label: 'Tips' },
+					{ route: 'app_posts_favorite', label: 'Favorites', role_user: true },
 					{ route: "app_#{app.user ? 'logout' : 'login'}", label: "#{app.user ? 'Logout' : 'Login'}"}
-				] %}
+				] | filter(item => item.role_user is not defined or item.role_user is same as(app.user is not null))
+				%}
 
 					<li>
 						<a href="{{ path(item.route, item.parameters ?? []) }}" class="block text-gray-300 {{ (_route == item.route ? '' : 'hover:') ~ 'bg-gray-700' }} rounded-lg p-3 md:py-2 my-1 md:my-0 text-sm font-medium">
@@ -28,6 +30,13 @@
 					</li>
 
 				{% endfor -%}
+				{% if app.user %}
+					<li>
+						<a href="{{ path('app_profile') }}">
+							<img src="{{ app.user.avatarFileName ? asset("/media/users/#{app.user.avatarFileName}") : "https://t3.ftcdn.net/jpg/03/49/45/70/360_F_349457036_XWvovNpNk79ftVg4cIpBhJurdihVoJ2B.jpg" }}" alt="{{ app.user.id }}" class="w-8 h-8 rounded-full">
+						</a>
+					</li>
+				{% endif %}
 				<!-- END: Menu -->
 			</ul>
 		</div>

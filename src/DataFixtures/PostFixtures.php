@@ -27,6 +27,8 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
             $post->setTitle($faker->sentence());
             $post->setSlug($faker->slug());
             $post->setContent($faker->paragraph(mt_rand(3, 6), true));
+            $post->setSeoTitle($faker->sentence());
+            $post->setSeoDescription($faker->sentence());
 
             // Number of users
             $countUsers = $this->entityManager->getRepository(User::class)->count([]);
@@ -45,6 +47,18 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
                         /** @var User $user */
                         $user = $this->getReference($reference);
                         $post->addLike($user);
+                    }
+                }
+            }
+
+            // Add between 1 and 5 favorites to the post (if there are any users)
+            if ($countUsers > 0 && 1 == mt_rand(0, 1)) {
+                foreach (range(1, mt_rand(1, 5)) as $j) {
+                    $reference = 'user_'.mt_rand(1, $countUsers - 1);
+                    if ($this->hasReference($reference)) {
+                        /** @var User $user */
+                        $user = $this->getReference($reference);
+                        $post->addFavorite($user);
                     }
                 }
             }

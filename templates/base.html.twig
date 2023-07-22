@@ -8,6 +8,8 @@
 				Welcome!
 			{%- endblock -%}
 		</title>
+		<meta name="description" content="{%- block meta_description -%}{%- endblock -%}">
+		
 		{% block stylesheets %}
 			{{- encore_entry_link_tags('app') -}}
 		{% endblock %}
