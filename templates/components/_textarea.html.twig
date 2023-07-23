@@ -1,0 +1,14 @@
+<div>
+	<div class="justify-between items-center mb-2">
+		{{ form_label(field, label, {'label_attr': {'class': 'block text-sm font-medium text-white'}}) }}
+		{% if form_errors(field) %}
+			<div class="py-2 my-4 text-sm text-red-400 rounded-lg bg-gray-800 flex">
+				<svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+				</svg>
+				<span class=" font-medium">{{ form_errors(field) }}</span>
+			</div>
+		{% endif %}
+	</div>
+	<textarea id="{{ field_name(field) }}" name="{{ field_name(field) }}" rows="4" class="block p-2.5 w-full text-sm rounded-lg border bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" placeholder="{{ field_label(field) }}">{{ field_value(field) }}</textarea>
+</div>

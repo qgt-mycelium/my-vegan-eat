@@ -1,0 +1,51 @@
+{% extends "base.html.twig" %}
+
+{%~ block body %}
+
+<!-- START: Sub_Categories -->
+{% if sub_categories | length > 0 %}
+<div class="container my-6 px-4 xl:px-0 max-w-6xl mx-auto grid rounded-lg shadow-sm gap-4 md:grid-cols-2">
+	
+{%- for category in sub_categories ~%}
+	
+	<a href="{{ path('app_category', {slug: category.slug | lower}) }}" class="flex flex-col items-center border rounded-lg shadow md:flex-row md:max-w-xl border-gray-700 bg-gray-800 hover:bg-gray-700">
+		<img class="object-cover w-full rounded-t-lg h-full md:w-48 md:rounded-none md:rounded-l-lg" src="https://t3.ftcdn.net/jpg/03/49/45/70/360_F_349457036_XWvovNpNk79ftVg4cIpBhJurdihVoJ2B.jpg" alt="">
+		<div class="flex flex-col justify-between p-4 leading-normal">
+			<h5 class="mb-2 text-2xl font-bold tracking-tight text-white">{{ "#{category.name}" }}</h5>
+			<p class="mb-3 font-normal text-gray-400">{{ category.description }}</p>
+		</div>
+	</a>
+
+{%- endfor ~%}
+
+</div>
+{% endif %}
+<!-- END: Sub_Categories -->
+
+<!-- START: Posts -->
+{% if category is defined and category.posts | length > 0 %}
+<div class="container max-w-6xl mx-auto grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-auto gap-4 py-6 px-4 xl:px-0">
+	{%~ for post in category.posts ~%}
+		{%~ include 'components/_card.html.twig' with { 
+			'tags': post.tags, 
+			'likes': post.likes,
+			'title': post.title,
+			'favorites': post.favorites,
+			'link': path('app_post', { slug: post.slug }),
+			'like_url': path('app_post_like', { slug: post.slug }),
+			'favorite_url': path('app_post_favorite', { slug: post.slug }),
+		} only %}
+	{% endfor ~%}
+</div>
+{% endif %}
+<!-- END: Posts -->
+
+<!-- START: No Posts -->
+{% if (sub_categories | length) == 0 and (category.posts | length) == 0 %}
+<div class="container max-w-6xl text-center mx-auto py-6 px-4 xl:px-0">
+	<p class="text-white">There are no posts in this category yet.</p>
+</div>
+{% endif %}
+<!-- END: No Posts -->
+
+{% endblock %}

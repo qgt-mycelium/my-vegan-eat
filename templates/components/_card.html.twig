@@ -1,0 +1,29 @@
+<!-- START: components/_card.html.twig -->
+<div class="card divide-y divide-gray-700 rounded-lg border border-gray-600 shadow-md bg-gray-800 text-gray-400">
+	<div style="background-image: url(https://t3.ftcdn.net/jpg/03/49/45/70/360_F_349457036_XWvovNpNk79ftVg4cIpBhJurdihVoJ2B.jpg)" class="py-6 bg-cover bg-center rounded-t-lg h-44">
+		{% if tags | length > 0 -%}
+		<div class="px-6 absolute">
+		
+			{% for tag in tags -%}
+				{% include 'components/_tag.html.twig' with {'tag': tag} only %}
+			{% endfor %}
+
+		</div>
+		{% endif %}
+
+	</div>
+
+	<div class="bg-gray-700">
+		<div class="flex justify-end font-medium">
+
+			{%~ include 'components/_favorite.html.twig' with {'favorites': favorites, 'favorite_url': (favorite_url ?? '')} only ~%}
+			{%~ include 'components/_like.html.twig' with {'likes': likes, 'like_url': (like_url ?? '')} only ~%}
+
+		</div>
+	</div>
+
+	<div class="p-6">
+		<a href="{{ link }}" class="font-bold text-base hover:text-white" title="{{ title }}">{{ title | u.truncate(60, '...') }}</a>
+	</div>
+</div>
+<!-- END: components/_card.html.twig -->

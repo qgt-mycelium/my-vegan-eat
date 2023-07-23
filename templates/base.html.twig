@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<title>
+			{%- block title -%}
+				Welcome!
+			{%- endblock -%}
+		</title>
+		<meta name="description" content="{%- block meta_description -%}{%- endblock -%}">
+		
+		{% block stylesheets %}
+			{{- encore_entry_link_tags('app') -}}
+		{% endblock %}
+
+		{% block javascripts %}
+			{{- encore_entry_script_tags('app') -}}
+		{% endblock %}
+
+	</head>
+	<body class="bg-gray-900 min-h-screen flex flex-col">
+
+		{% block body_prepend %}
+	
+			{%~ include "partials/_header.html.twig" with {'banner': banner ?? []} only ~%}
+			{% block body %}{% endblock %}
+			{{~ render_esi(controller('App\\Controller\\HomeController::footer')) ~}}
+
+		{% endblock %}
+
+	</body>
+</html>

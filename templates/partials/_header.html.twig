@@ -1,0 +1,58 @@
+<!-- START: Navigation -->
+<nav class="border-gray-600 bg-gray-800 sticky top-0 z-40">
+	<div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
+		<a href="{{ path('app_home') }}" class="flex items-center">
+			<span class="self-center text-2xl font-semibold whitespace-nowrap text-white">{{ '🍃 MyVeganEat' }}</span>
+		</a>
+		<button type="button" id="navbar-burger" class="inline-flex items-center p-2 ml-1 text-sm text-gray-400 rounded-lg md:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600">
+			<span class="sr-only">Open main menu</span>
+			<svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+				<path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+			</svg>
+		</button>
+		<div id="navbar-menu" class="items-center justify-between font-medium hidden w-full md:flex md:w-auto md:order-1">
+			<ul class="flex flex-col p-4 md:p-0 mt-4 border border-gray-700 rounded-lg bg-gray-800 md:flex-row md:space-x-8 md:mt-0 md:border-0 items-center">
+				<!-- START: Menu -->
+				{% set _route = app.request.attributes.get('_route') %}
+				{% for item in [
+					{ route: 'app_home', label: 'Home' },
+					{ route: 'app_category', label: 'Recipes', parameters: {slug: 'recipes'} },
+					{ route: 'app_categories', label: 'Tips' },
+					{ route: 'app_posts_favorite', label: 'Favorites', role_user: true },
+					{ route: "app_#{app.user ? 'logout' : 'login'}", label: "#{app.user ? 'Logout' : 'Login'}"}
+				] | filter(item => item.role_user is not defined or item.role_user is same as(app.user is not null))
+				%}
+
+					<li>
+						<a href="{{ path(item.route, item.parameters ?? []) }}" class="block text-gray-300 {{ (_route == item.route ? '' : 'hover:') ~ 'bg-gray-700' }} rounded-lg p-3 md:py-2 my-1 md:my-0 text-sm font-medium">
+							{{- item.label -}}
+						</a>
+					</li>
+
+				{% endfor -%}
+				{% if app.user %}
+					<li>
+						<a href="{{ path('app_profile') }}">
+							<img src="{{ app.user.avatarFileName ? asset("/media/users/#{app.user.avatarFileName}") : "https://t3.ftcdn.net/jpg/03/49/45/70/360_F_349457036_XWvovNpNk79ftVg4cIpBhJurdihVoJ2B.jpg" }}" alt="{{ app.user.id }}" class="w-8 h-8 rounded-full">
+						</a>
+					</li>
+				{% endif %}
+				<!-- END: Menu -->
+			</ul>
+		</div>
+	</div>
+</nav>
+<!-- END: Navigation -->
+
+{% if banner is defined and not banner is same as(false) %}
+	<!-- START: Banner -->
+	<div style="background-image: url({{ asset("/build/images/banners/#{banner.image ?? 'home.png'}") }})" class="w-full h-64 bg-cover">
+		<div class="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50">
+			<div class="text-center">
+				<h1 class="text-4xl font-semibold text-white">{{ "#{banner.title ?? '🍃 MyVeganEat'}" }}</h1>
+				<p class="text-xl font-semibold text-white">{{ "#{banner.slogan ?? 'The best vegan recipes'}" }}</p>
+			</div>
+		</div>
+	</div>
+	<!-- END: Banner -->
+{% endif %}

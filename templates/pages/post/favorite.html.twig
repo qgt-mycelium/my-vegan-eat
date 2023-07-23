@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="container max-w-6xl mx-auto grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-auto gap-4 py-6 px-4 xl:px-0">
+		{% for post in posts %}
+			{% include 'components/_card.html.twig' with { 
+                'tags': post.tags, 
+                'likes': post.likes,
+                'title': post.title,
+                'favorites': post.favorites,
+                'link': path('app_post', { slug: post.slug }),
+                'like_url': path('app_post_like', { slug: post.slug }),
+                'favorite_url': path('app_post_favorite', { slug: post.slug }),
+            } only %}
+		{% else %}
+			<div class="container max-w-6xl text-center mx-auto py-6 px-4 xl:px-0">
+				<p class="text-white">There are no posts yet.</p>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}
