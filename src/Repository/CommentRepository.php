@@ -52,7 +52,7 @@ class CommentRepository extends ServiceEntityRepository
     /* ---------- Hydrate functions ---------- */
 
     /**
-     * Hydrate the posts of the given categories.
+     * Hydrate the comments.
      *
      * @param Comment[] $comments
      */
@@ -89,6 +89,41 @@ class CommentRepository extends ServiceEntityRepository
         // Set the comments to the comments
         foreach ($comments as $comment) {
             $comment->setComments($commentsByCommentId[$comment->getId()] ?? []);
+        }
+    }
+
+    /**
+     * Hydrate the posts.
+     *
+     * @param Comment[] $comments
+     */
+    public function hydratePosts($comments): void
+    {
+        // Get the posts ids
+        $postsIds = array_map(function (Comment $comment) {
+            return $comment->getPost()->getId();
+        }, $comments);
+
+        /** @var Post[] $posts */
+        $posts = $this->getEntityManager()->getRepository(Post::class)
+            ->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.id IN (:posts_ids)')
+            ->setParameters([
+                ':posts_ids' => $postsIds,
+            ])
+            ->getQuery()
+            ->getResult();
+
+        // Create an array with the post id as key and the post as value
+        $postsByPostId = [];
+        foreach ($posts as $post) {
+            $postsByPostId[$post->getId()] = $post;
+        }
+
+        // Set the post to the comments
+        foreach ($comments as $comment) {
+            $comment->setPost($postsByPostId[$comment->getPost()->getId()]);
         }
     }
 }

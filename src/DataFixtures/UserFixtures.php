@@ -31,6 +31,14 @@ class UserFixtures extends Fixture
             $this->addReference('user_'.$i, $user);
         }
 
+        // Create a user with the username 'test_admin' and the password 'password'
+        $user = (new User());
+        $user->setEmail($faker->email());
+        $user->setUsername('test_admin');
+        $user->setPassword($this->passwordHasher->hashPassword($user, 'password'));
+        $user->setRoles(['ROLE_ADMIN']);
+        $manager->persist($user);
+
         // Flush the users to the database
         $manager->flush();
     }
