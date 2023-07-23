@@ -15,7 +15,6 @@ class CategoryController extends AbstractController
     {
         /** @var Category[] $sub_categories */
         $sub_categories = $categoryRepository->findBy(['parent' => null]);
-        $categoryRepository->hydratePosts($sub_categories);
 
         return $this->render('pages/category/index.html.twig', [
             'sub_categories' => $sub_categories,

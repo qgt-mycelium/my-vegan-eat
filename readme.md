@@ -53,7 +53,7 @@
 - Un commentaire
     - A un auteur
     - Est rattaché à un article
-    - A une date de publication
+    - Doit être validé pour être publié
     - Peut avoir des likes
     - Peut avoir des commentaires
 

@@ -63,6 +63,11 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
                 }
             }
 
+            // Set good to know randomly
+            if (1 == mt_rand(0, 1)) {
+                $post->setIsGoodToKnow(true);
+            }
+
             // Add between 1 and 3 tags to the post (if there are any tags)
             if ($countTags > 0 && 1 == mt_rand(0, 1)) {
                 foreach (range(1, mt_rand(1, 3)) as $j) {

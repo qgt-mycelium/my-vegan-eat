@@ -19,6 +19,9 @@ class Post
     #[ORM\Column(type: 'integer')]
     private int $id;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isGoodToKnow = false;
+
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
     private string $title;
@@ -315,6 +318,18 @@ class Post
     public function setSeoDescription(?string $seoDescription): Post
     {
         $this->seoDescription = $seoDescription;
+
+        return $this;
+    }
+
+    public function isGoodToKnow(): bool
+    {
+        return $this->isGoodToKnow;
+    }
+
+    public function setIsGoodToKnow(bool $isGoodToKnow): Post
+    {
+        $this->isGoodToKnow = $isGoodToKnow;
 
         return $this;
     }

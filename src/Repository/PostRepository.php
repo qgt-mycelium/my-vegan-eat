@@ -18,6 +18,25 @@ class PostRepository extends ServiceEntityRepository
     /* ---------- Custom queries ---------- */
 
     /**
+     * Find published posts good to know ordered by newest.
+     *
+     * @return Post[]
+     */
+    public function findPublishedGoodToKnowOrderedByNewest(): array
+    {
+        $query = $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.publishedAt IS NOT NULL')
+            ->andWhere('p.isGoodToKnow = true')
+            ->orderBy('p.publishedAt', 'DESC');
+
+        /** @var Post[] $posts */
+        $posts = $query->getQuery()->getResult();
+
+        return $posts;
+    }
+
+    /**
      * Find favorite posts for a user.
      *
      * @return Post[]
@@ -77,10 +96,6 @@ class PostRepository extends ServiceEntityRepository
         /** @var Post[] $posts */
         $posts = $query->getQuery()->getResult();
 
-        $this->hydrateTags($posts);
-        $this->hydrateLikes($posts);
-        $this->hydrateFavorites($posts);
-
         return $posts;
     }
 
@@ -112,9 +127,9 @@ class PostRepository extends ServiceEntityRepository
     public function hydrateLikes($posts): void
     {
         // Get the posts ids
-        $postsIds = array_map(function ($post) {
+        $postsIds = array_unique(array_map(function ($post) {
             return $post->getId();
-        }, $posts);
+        }, $posts));
 
         // Get the posts with their likes
         /** @var Post[] $postWithLikes */
@@ -148,9 +163,9 @@ class PostRepository extends ServiceEntityRepository
     public function hydrateFavorites($posts): void
     {
         // Get the posts ids
-        $postsIds = array_map(function ($post) {
+        $postsIds = array_unique(array_map(function ($post) {
             return $post->getId();
-        }, $posts);
+        }, $posts));
 
         // Get the posts with their favorites
         /** @var Post[] $postWithFavorites */

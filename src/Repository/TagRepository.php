@@ -30,9 +30,9 @@ class TagRepository extends ServiceEntityRepository
             ->join('t.posts', 'p');
 
         // Get the posts ids
-        $postsIds = array_map(function ($post) {
+        $postsIds = array_unique(array_map(function ($post) {
             return $post->getId();
-        }, $posts);
+        }, $posts));
 
         // Filter the query by the posts ids
         $query->where('p.id IN (:postsIds)')

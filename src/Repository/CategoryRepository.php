@@ -39,6 +39,7 @@ class CategoryRepository extends ServiceEntityRepository
 
             $postRepository->hydrateTags($posts);
             $postRepository->hydrateLikes($posts);
+            $postRepository->hydrateFavorites($posts);
         }
 
         return $category;
@@ -61,50 +62,6 @@ class CategoryRepository extends ServiceEntityRepository
         /** @var Category[] $categories */
         $categories = $query->getResult();
 
-        $this->hydratePosts($categories);
-
-        // Remove categories without posts
-        $categories = array_filter($categories, function (Category $category) {
-            return count($category->getPosts()) > 0;
-        });
-
         return $categories;
-    }
-
-    /* ---------- Hydrate functions ---------- */
-
-    /**
-     * Hydrate the posts of the given categories.
-     *
-     * @param Category[] $categories
-     */
-    public function hydratePosts(array $categories): void
-    {
-        // Get the categories ids
-        $categoriesIds = array_map(function (Category $category) {
-            return $category->getId();
-        }, $categories);
-
-        /** @var Category[] $categoryWithPosts */
-        $categoryWithPosts = $this->createQueryBuilder('c')
-            ->select('c', 'p')
-            ->join('c.posts', 'p')
-            ->where('c.id IN (:categories_ids)')
-            ->setParameter('categories_ids', $categoriesIds)
-            ->getQuery()
-            ->getResult();
-
-        // Create an array with the post id as key and an array of likes as value
-        $postsByCategoryId = [];
-        foreach ($categoryWithPosts as $category) {
-            foreach ($category->getPosts() as $post) {
-                $postsByCategoryId[$category->getId()][] = $post;
-            }
-        }
-
-        // Set the posts to the categories
-        foreach ($categories as $category) {
-            $category->setPosts($postsByCategoryId[$category->getId()] ?? []);
-        }
     }
 }

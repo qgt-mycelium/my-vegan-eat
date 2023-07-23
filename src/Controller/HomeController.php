@@ -12,8 +12,17 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home', methods: ['GET'])]
     public function index(PostRepository $postRepository): Response
     {
+        $posts = $postRepository->findPublishedOrderedByNewest(8);
+        $goodToKnow = $postRepository->findPublishedGoodToKnowOrderedByNewest();
+        $hydratablePosts = array_merge($posts, $goodToKnow);
+
+        $postRepository->hydrateTags($hydratablePosts);
+        $postRepository->hydrateLikes($hydratablePosts);
+        $postRepository->hydrateFavorites($hydratablePosts);
+
         return $this->render('pages/home.html.twig', [
-            'posts' => $postRepository->findPublishedOrderedByNewest(8),
+            'posts' => $posts,
+            'good_to_know' => $goodToKnow,
         ]);
     }
 

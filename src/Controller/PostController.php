@@ -21,8 +21,14 @@ class PostController extends AbstractController
     #[Route('/posts', name: 'app_posts', methods: ['GET'])]
     public function index(PostRepository $postRepository): Response
     {
+        $posts = $postRepository->findPublishedOrderedByNewest();
+
+        $postRepository->hydrateTags($posts);
+        $postRepository->hydrateLikes($posts);
+        $postRepository->hydrateFavorites($posts);
+
         return $this->render('pages/post/index.html.twig', [
-            'posts' => $postRepository->findPublishedOrderedByNewest(),
+            'posts' => $posts,
         ]);
     }
 
