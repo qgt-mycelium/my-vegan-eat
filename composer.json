@@ -23,6 +23,7 @@
         "symfony/security-core": "6.3.*",
         "symfony/security-csrf": "6.3.*",
         "symfony/string": "6.3.*",
+        "symfony/ux-chartjs": "^2.10",
         "symfony/validator": "6.3.*",
         "symfony/var-dumper": "6.3.*",
         "symfony/webpack-encore-bundle": "^2.0",

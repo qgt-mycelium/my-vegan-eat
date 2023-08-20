@@ -64,4 +64,24 @@ class CategoryRepository extends ServiceEntityRepository
 
         return $categories;
     }
+
+    /* ---------- Hydrate functions ---------- */
+
+    /**
+     * Hydrate the posts.
+     *
+     * @param Category[] $categories
+     */
+    public function hydratePosts($categories): void
+    {
+        $posts = $this->getEntityManager()
+            ->getRepository(Post::class)
+            ->findAllOrderedByNameForCategories($categories);
+
+        foreach ($categories as $category) {
+            /** @var Post[]|array $categoryPosts */
+            $categoryPosts = $posts[$category->getId()] ?? [];
+            $category->setPosts($categoryPosts);
+        }
+    }
 }

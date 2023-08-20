@@ -80,6 +80,9 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
+
+    // stimulus
+    .enableStimulusBridge('./assets/controllers.json')
 ;
 
 module.exports = Encore.getWebpackConfig();

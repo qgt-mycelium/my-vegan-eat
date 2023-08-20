@@ -34,8 +34,7 @@ class CommentRepository extends ServiceEntityRepository
                 ':isDeleted' => false,
                 ':post' => $post,
             ])
-            ->orderBy('c.createdAt', 'DESC')
-        ;
+            ->orderBy('c.createdAt', 'DESC');
 
         /** @var Comment[] $comments */
         $comments = $query->getQuery()->getResult();
@@ -49,6 +48,43 @@ class CommentRepository extends ServiceEntityRepository
         return $comments;
     }
 
+    /**
+     * Find number of comments per month for the last 12 months.
+     *
+     * @return array<string, array<int, array<string, mixed>>>
+     */
+    public function findNumberOfCommentsPerMonthForLast12Months()
+    {
+        $query = $this->getEntityManager()
+            ->getConnection()
+            ->executeQuery(
+                (string) preg_replace(
+                    "/\s+/",
+                    ' ',
+                    'SELECT MONTH(created_at) as position, COUNT(id) as count, is_published, is_deleted
+                    FROM comment 
+                    WHERE created_at > SUBDATE(NOW(), INTERVAL 12 MONTH)
+                    GROUP BY MONTH(created_at), is_published, is_deleted;'
+                ),
+            );
+
+        $result = $query->fetchAllAssociative();
+
+        $return = [
+            'published' => array_filter($result, function ($item) {
+                return true == $item['is_published'] && false == $item['is_deleted'];
+            }),
+            'deleted' => array_filter($result, function ($item) {
+                return true == $item['is_published'] && true == $item['is_deleted'];
+            }),
+            'waiting_approval' => array_filter($result, function ($item) {
+                return false == $item['is_published'] && false == $item['is_deleted'];
+            }),
+        ];
+
+        return $return;
+    }
+
     /* ---------- Hydrate functions ---------- */
 
     /**
@@ -59,9 +95,9 @@ class CommentRepository extends ServiceEntityRepository
     public function hydrateComments($comments): void
     {
         // Get the comments ids
-        $commentsIds = array_map(function (Comment $comment) {
+        $commentsIds = array_unique(array_map(function (Comment $comment) {
             return $comment->getId();
-        }, $comments);
+        }, $comments));
 
         /** @var Comment[] $commentWithComments */
         $commentWithComments = $this->createQueryBuilder('c')
@@ -100,9 +136,9 @@ class CommentRepository extends ServiceEntityRepository
     public function hydratePosts($comments): void
     {
         // Get the posts ids
-        $postsIds = array_map(function (Comment $comment) {
+        $postsIds = array_unique(array_map(function (Comment $comment) {
             return $comment->getPost()->getId();
-        }, $comments);
+        }, $comments));
 
         /** @var Post[] $posts */
         $posts = $this->getEntityManager()->getRepository(Post::class)

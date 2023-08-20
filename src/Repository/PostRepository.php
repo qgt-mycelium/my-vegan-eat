@@ -5,7 +5,9 @@ namespace App\Repository;
 use App\Entity\Tag;
 use App\Entity\Post;
 use App\Entity\User;
+use App\Entity\Category;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 class PostRepository extends ServiceEntityRepository
@@ -34,6 +36,49 @@ class PostRepository extends ServiceEntityRepository
         $posts = $query->getQuery()->getResult();
 
         return $posts;
+    }
+
+    /**
+     * Find all posts ordered by name for categories entities.
+     *
+     * @param Category[] $categories
+     */
+    public function findAllOrderedByNameForCategories(array $categories): ArrayCollection
+    {
+        // Get the tags for the posts
+        $query = $this->createQueryBuilder('p')
+            ->select('p', 'c')
+            ->join('p.categories', 'c');
+
+        // Get the posts ids
+        $categoriesIds = array_unique(array_map(function ($category) {
+            return $category->getId();
+        }, $categories));
+
+        // Filter the query by the posts ids
+        $query->where('c.id IN (:categoriesIds)')
+            ->andWhere('p.publishedAt IS NOT NULL')
+            ->setParameter('categoriesIds', $categoriesIds);
+
+        // Get the posts
+        /** @var Post[] $posts */
+        $posts = $query->getQuery()->getResult();
+
+        // Create an array with the post id as key and an array of tags as value
+        $postsByCategoryId = [];
+        foreach ($posts as $post) {
+            foreach ($post->getCategories() as $category) {
+                $postsByCategoryId[$category->getId()][] = $post;
+
+                // Sort posts by title
+                usort($postsByCategoryId[$category->getId()], function ($a, $b) {
+                    return $a->getTitle() <=> $b->getTitle();
+                });
+            }
+        }
+
+        // Return an ArrayCollection with the tags by post id
+        return new ArrayCollection($postsByCategoryId);
     }
 
     /**

@@ -23,9 +23,9 @@
 <!-- END: Sub_Categories -->
 
 <!-- START: Posts -->
-{% if category is defined and category.posts | length > 0 %}
+{% if category is defined and category.posts | filter(p => p.publishedAt is not null) | length > 0 %}
 <div class="container max-w-6xl mx-auto grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-auto gap-4 py-6 px-4 xl:px-0">
-	{%~ for post in category.posts ~%}
+	{%~ for post in category.posts | filter(p => p.publishedAt is not null) ~%}
 		{%~ include 'components/_card.html.twig' with { 
 			'tags': post.tags, 
 			'likes': post.likes,
@@ -41,7 +41,7 @@
 <!-- END: Posts -->
 
 <!-- START: No Posts -->
-{% if (sub_categories | length) == 0 and (category.posts | length) == 0 %}
+{% if (sub_categories | length) == 0 and (category.posts | filter(p => p.publishedAt is not null) | length) == 0 %}
 <div class="container max-w-6xl text-center mx-auto py-6 px-4 xl:px-0">
 	<p class="text-white">There are no posts in this category yet.</p>
 </div>
